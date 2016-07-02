@@ -1,46 +1,46 @@
 package com.simpleplugin;
-
-import com.intellij.lexer.FlexLexer;
+import com.intellij.lexer.*;
 import com.intellij.psi.tree.IElementType;
-import com.simpleplugin.psi.SimpleTypes;
-import com.intellij.psi.TokenType;
+import static com.simpleplugin.psi.SimpleTypes.*;
 
 %%
 
+%{
+  public SimpleLexer() {
+    this((java.io.Reader)null);
+  }
+%}
+
+%public
 %class SimpleLexer
 %implements FlexLexer
-%unicode
 %function advance
 %type IElementType
-%eof{  return;
-%eof}
+%unicode
 
-CRLF= \n|\r|\r\n
-WHITE_SPACE=[\ \t\f]
-FIRST_VALUE_CHARACTER=[^ \n\r\f\\] | "\\"{CRLF} | "\\".
-VALUE_CHARACTER=[^\n\r\f\\] | "\\"{CRLF} | "\\".
-END_OF_LINE_COMMENT=("#"|"!")[^\r\n]*
-SEPARATOR=[:=]
-KEY_CHARACTER=[^:=\ \n\r\t\f\\] | "\\ "
+EOL="\r"|"\n"|"\r\n"
+LINE_WS=[\ \t\f]
+WHITE_SPACE=({LINE_WS}|{EOL})+
 
-%state WAITING_VALUE
+NUMBER=[0-9]+(\.[0-9]*)?
+COMMENT="//".*
+CRLF=\n|\r|\r\n
 
 %%
+<YYINITIAL> {
+  {WHITE_SPACE}      { return com.intellij.psi.TokenType.WHITE_SPACE; }
 
-<YYINITIAL> {END_OF_LINE_COMMENT}                           { yybegin(YYINITIAL); return SimpleTypes.COMMENT; }
+  "("                { return LP; }
+  ")"                { return RP; }
+  "+"                { return OP_1; }
+  "-"                { return OP_2; }
+  "*"                { return OP_3; }
+  "/"                { return OP_4; }
+  "!"                { return OP_5; }
 
-<YYINITIAL> {KEY_CHARACTER}+                                { yybegin(YYINITIAL); return SimpleTypes.KEY; }
+  {NUMBER}           { return NUMBER; }
+  {COMMENT}          { return COMMENT; }
+  {CRLF}             { return CRLF; }
 
-<YYINITIAL> {SEPARATOR}                                     { yybegin(WAITING_VALUE); return SimpleTypes.SEPARATOR; }
-
-<WAITING_VALUE> {CRLF}({CRLF}|{WHITE_SPACE})+               { yybegin(YYINITIAL); return TokenType.WHITE_SPACE; }
-
-<WAITING_VALUE> {WHITE_SPACE}+                              { yybegin(WAITING_VALUE); return TokenType.WHITE_SPACE; }
-
-<WAITING_VALUE> {FIRST_VALUE_CHARACTER}{VALUE_CHARACTER}*   { yybegin(YYINITIAL); return SimpleTypes.VALUE; }
-
-({CRLF}|{WHITE_SPACE})+                                     { yybegin(YYINITIAL); return TokenType.WHITE_SPACE; }
-
-{WHITE_SPACE}+                                              { yybegin(YYINITIAL); return TokenType.WHITE_SPACE; }
-
-.                                                           { return TokenType.BAD_CHARACTER; }
+  [^] { return com.intellij.psi.TokenType.BAD_CHARACTER; }
+}

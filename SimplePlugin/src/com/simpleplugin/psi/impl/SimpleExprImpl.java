@@ -11,14 +11,14 @@ import static com.simpleplugin.psi.SimpleTypes.*;
 import com.intellij.extapi.psi.ASTWrapperPsiElement;
 import com.simpleplugin.psi.*;
 
-public class SimplePropertyImpl extends ASTWrapperPsiElement implements SimpleProperty {
+public class SimpleExprImpl extends ASTWrapperPsiElement implements SimpleExpr {
 
-  public SimplePropertyImpl(ASTNode node) {
+  public SimpleExprImpl(ASTNode node) {
     super(node);
   }
 
   public void accept(@NotNull SimpleVisitor visitor) {
-    visitor.visitProperty(this);
+    visitor.visitExpr(this);
   }
 
   public void accept(@NotNull PsiElementVisitor visitor) {

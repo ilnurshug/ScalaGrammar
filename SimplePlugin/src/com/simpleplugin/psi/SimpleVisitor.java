@@ -7,8 +7,24 @@ import com.intellij.psi.PsiElement;
 
 public class SimpleVisitor extends PsiElementVisitor {
 
-  public void visitProperty(@NotNull SimpleProperty o) {
+  public void visitExpr(@NotNull SimpleExpr o) {
     visitPsiElement(o);
+  }
+
+  public void visitLiteralExpr(@NotNull SimpleLiteralExpr o) {
+    visitExpr(o);
+  }
+
+  public void visitMulExpr(@NotNull SimpleMulExpr o) {
+    visitExpr(o);
+  }
+
+  public void visitParenExpr(@NotNull SimpleParenExpr o) {
+    visitExpr(o);
+  }
+
+  public void visitPlusExpr(@NotNull SimplePlusExpr o) {
+    visitExpr(o);
   }
 
   public void visitPsiElement(@NotNull PsiElement o) {
