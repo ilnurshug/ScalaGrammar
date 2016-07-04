@@ -25,6 +25,7 @@ WHITE_SPACE=({LINE_WS}|{EOL})+
 NUMBER=[0-9]+(\.[0-9]*)?
 COMMENT="//".*
 CRLF=\n|\r|\r\n
+WORDS=[a-z ]+
 
 %%
 <YYINITIAL> {
@@ -36,11 +37,14 @@ CRLF=\n|\r|\r\n
   "-"                { return OP_2; }
   "*"                { return OP_3; }
   "/"                { return OP_4; }
-  "!"                { return OP_5; }
+  "define:"          { return KEYWORD_1; }
+  "site:"            { return KEYWORD_2; }
+  "links:"           { return KEYWORD_3; }
 
   {NUMBER}           { return NUMBER; }
   {COMMENT}          { return COMMENT; }
   {CRLF}             { return CRLF; }
+  {WORDS}            { return WORDS; }
 
   [^] { return com.intellij.psi.TokenType.BAD_CHARACTER; }
 }

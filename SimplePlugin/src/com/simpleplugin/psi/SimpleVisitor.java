@@ -27,6 +27,10 @@ public class SimpleVisitor extends PsiElementVisitor {
     visitExpr(o);
   }
 
+  public void visitQuery(@NotNull SimpleQuery o) {
+    visitPsiElement(o);
+  }
+
   public void visitPsiElement(@NotNull PsiElement o) {
     visitElement(o);
   }

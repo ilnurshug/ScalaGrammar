@@ -13,17 +13,21 @@ public interface SimpleTypes {
   IElementType MUL_EXPR = new SimpleElementType("MUL_EXPR");
   IElementType PAREN_EXPR = new SimpleElementType("PAREN_EXPR");
   IElementType PLUS_EXPR = new SimpleElementType("PLUS_EXPR");
+  IElementType QUERY = new SimpleElementType("QUERY");
 
   IElementType COMMENT = new SimpleTokenType("comment");
   IElementType CRLF = new SimpleTokenType("crlf");
+  IElementType KEYWORD_1 = new SimpleTokenType("define:");
+  IElementType KEYWORD_2 = new SimpleTokenType("site:");
+  IElementType KEYWORD_3 = new SimpleTokenType("links:");
   IElementType LP = new SimpleTokenType("(");
   IElementType NUMBER = new SimpleTokenType("number");
   IElementType OP_1 = new SimpleTokenType("+");
   IElementType OP_2 = new SimpleTokenType("-");
   IElementType OP_3 = new SimpleTokenType("*");
   IElementType OP_4 = new SimpleTokenType("/");
-  IElementType OP_5 = new SimpleTokenType("!");
   IElementType RP = new SimpleTokenType(")");
+  IElementType WORDS = new SimpleTokenType("words");
 
   class Factory {
     public static PsiElement createElement(ASTNode node) {
@@ -42,6 +46,9 @@ public interface SimpleTypes {
       }
       else if (type == PLUS_EXPR) {
         return new SimplePlusExprImpl(node);
+      }
+      else if (type == QUERY) {
+        return new SimpleQueryImpl(node);
       }
       throw new AssertionError("Unknown element type: " + type);
     }

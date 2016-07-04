@@ -19,12 +19,17 @@
       number='regexp:\d+(\.\d*)?'
       comment='regexp://.*'
       crlf='regexp:\n|\r|\r\n'
+      words='regexp:[a-z ]+'
 
       op_1='+'
       op_2='-'
       op_3='*'
       op_4='/'
-      op_5='!'
+
+      keyword_1="define:"
+      keyword_2="site:"
+      keyword_3="links:"
+
   ]
 
   name(".*expr")='expression'
@@ -33,7 +38,7 @@
 
 simpleFile ::= item_*
 
-private item_ ::= (expr|comment|crlf)
+private item_ ::= (expr|comment|crlf|query)
 
 expr ::= factor plus_expr *
 left plus_expr ::= plus_op factor
@@ -45,3 +50,6 @@ private primary ::= primary_inner
 private primary_inner ::= literal_expr | paren_expr
 paren_expr ::= '(' expr ')'
 literal_expr ::= number
+
+query ::= keyword words
+private keyword ::= "define:" | "site:" | "links:"

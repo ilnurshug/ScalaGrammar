@@ -38,6 +38,9 @@ public class SimpleParser implements PsiParser, LightPsiParser {
     else if (t == PLUS_EXPR) {
       r = plus_expr(b, 0);
     }
+    else if (t == QUERY) {
+      r = query(b, 0);
+    }
     else {
       r = parse_root_(t, b, 0);
     }
@@ -104,7 +107,7 @@ public class SimpleParser implements PsiParser, LightPsiParser {
   }
 
   /* ********************************************************** */
-  // expr|comment|crlf
+  // expr|comment|crlf|query
   static boolean item_(PsiBuilder b, int l) {
     if (!recursion_guard_(b, l, "item_")) return false;
     boolean r;
@@ -112,6 +115,20 @@ public class SimpleParser implements PsiParser, LightPsiParser {
     r = expr(b, l + 1);
     if (!r) r = consumeToken(b, COMMENT);
     if (!r) r = consumeToken(b, CRLF);
+    if (!r) r = query(b, l + 1);
+    exit_section_(b, m, null, r);
+    return r;
+  }
+
+  /* ********************************************************** */
+  // "define:" | "site:" | "links:"
+  static boolean keyword(PsiBuilder b, int l) {
+    if (!recursion_guard_(b, l, "keyword")) return false;
+    boolean r;
+    Marker m = enter_section_(b);
+    r = consumeToken(b, KEYWORD_1);
+    if (!r) r = consumeToken(b, KEYWORD_2);
+    if (!r) r = consumeToken(b, KEYWORD_3);
     exit_section_(b, m, null, r);
     return r;
   }
@@ -210,6 +227,18 @@ public class SimpleParser implements PsiParser, LightPsiParser {
     r = literal_expr(b, l + 1);
     if (!r) r = paren_expr(b, l + 1);
     exit_section_(b, m, null, r);
+    return r;
+  }
+
+  /* ********************************************************** */
+  // keyword words
+  public static boolean query(PsiBuilder b, int l) {
+    if (!recursion_guard_(b, l, "query")) return false;
+    boolean r;
+    Marker m = enter_section_(b, l, _NONE_, QUERY, "<query>");
+    r = keyword(b, l + 1);
+    r = r && consumeToken(b, WORDS);
+    exit_section_(b, l, m, r, false, null);
     return r;
   }
 
