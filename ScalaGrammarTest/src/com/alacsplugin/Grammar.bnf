@@ -13,102 +13,102 @@
   tokenTypeClass="com.alacsplugin.psi.AlacsTokenType"
 
   tokens=[
-    upper='regexp:[A-Z]'
-    lower='regexp:[a-z]'
-    L='regexp:[lL]'
-    floatType='regexp:[fFdD]'
-    EXP='regexp:[eE]'
-    HEX='regexp:[xX]'
-    crlf='regexp:\n|\r|\r\n'
-    zero='0'
-    nonZeroDigit='regexp:[1-9]'
-    hexDigit='regexp:[0-9a-fA-F]'
-    LEFT_BRACE="{"
-    RIGHT_BRACE="}"
-    LEFT_BRACKET="["
-    RIGHT_BRACKET="]"
-    LEFT_PAREN="("
-    RIGHT_PAREN=")"
-    SEMICOLON=";"
-    DOT="."
-    COMMA=","
-    Q_MARK='"'
-    Q_MARK_2="'"
-    COLON=":"
-    UNDERSCORE="_"
-    EQ='='
-    TO='=>'
-    LARROW='<-'
-    LL='<:'
-    RR='>:'
-    SHARP='#'
-    AT='@'
-    LLL='<%'
-    EPT='!'
-    TLD='~'
-    SLASH='\'
-    abstract="abstract"
-    case="case"
-    catch="catch"
-    class="class"
-    def="def"
-    do="do"
-    else="else"
-    extends="extends"
-    false="false"
-    final="final"
-    finally="finally"
-    for="for"
-    forSome="forSome"
-    if="if"
-    implicit="implicit"
-    import="import"
-    lazy="lazy"
-    macro="macro"
-    match="match"
-    new="new"
-    null="null"
-    object="object"
-    override="override"
-    package="package"
-    private="private"
-    protected="protected"
-    return="return"
-    sealed="sealed"
-    super="super"
-    this="this"
-    throw="throw"
-    trait="trait"
-    try="try"
-    true="true"
-    type="type"
-    val="val"
-    var="var"
-    while="while"
-    with="with"
-    yield="yield"
-    op_1='+'
-    op_2='-'
-    op_3='*'
-    op_4='/'
-    comment='regexp://.*'
-    any='regexp:.'
+    UPPER				=  'regexp:[A-Z]'
+    LOWER				=  'regexp:[a-z]'
+    L				    =  'regexp:[lL]'
+    FLOATTYPE			=  'regexp:[fFdD]'
+    EXP				    =  'regexp:[eE]'
+    HEX				    =  'regexp:[xX]'
+    CRLF				=  'regexp:\n|\r|\r\n'
+    ZERO				=  '0'
+    NONZERODIGIT		=  'regexp:[1-9]'
+    HEXDIGIT			=  'regexp:[0-9a-fA-F]'
+    LEFT_BRACE			=  "{"
+    RIGHT_BRACE			=  "}"
+    LEFT_BRACKET		=  "["
+    RIGHT_BRACKET		=  "]"
+    LEFT_PAREN			=  "("
+    RIGHT_PAREN			=  ")"
+    SEMICOLON			=  ";"
+    DOT				    =  "."
+    COMMA				=  ","
+    Q_MARK				=  '"'
+    Q_MARK_2			=  "'"
+    COLON				=  ":"
+    UNDERSCORE			=  "_"
+    EQ				    =  '='
+    TO				    =  '=>'
+    LARROW				=  '<-'
+    LL				    =  '<:'
+    RR				    =  '>:'
+    SHARP				=  '#'
+    AT				    =  '@'
+    LLL				    =  '<%'
+    EPT				    =  '!'
+    TLD				    =  '~'
+    SLASH				=  '\'
+    ABSTRACT			=  "abstract"
+    CASE				=  "case"
+    CATCH				=  "catch"
+    CLASS				=  "class"
+    DEF				    =  "def"
+    DO				    =  "do"
+    ELSE				=  "else"
+    EXTENDS				=  "extends"
+    FALSE				=  "false"
+    FINAL				=  "final"
+    FINALLY				=  "finally"
+    FOR				    =  "for"
+    FORSOME				=  "forSome"
+    IF				    =  "if"
+    IMPLICIT			=  "implicit"
+    IMPORT				=  "import"
+    LAZY				=  "lazy"
+    MACRO				=  "macro"
+    MATCH				=  "match"
+    NEW				    =  "new"
+    NULL				=  "null"
+    OBJECT				=  "object"
+    OVERRIDE			=  "override"
+    PACKAGE				=  "package"
+    PRIVATE				=  "private"
+    PROTECTED			=  "protected"
+    RETURN				=  "return"
+    SEALED				=  "sealed"
+    SUPER				=  "super"
+    THIS				=  "this"
+    THROW				=  "throw"
+    TRAIT				=  "trait"
+    TRY				    =  "try"
+    TRUE				=  "true"
+    TYPE				=  "type"
+    VAL				    =  "val"
+    VAR				    =  "var"
+    WHILE				=  "while"
+    WITH				=  "with"
+    YIELD				=  "yield"
+    OP_1				=  '+'
+    OP_2				=  '-'
+    OP_3				=  '*'
+    OP_4				=  '/'
+    COMMENT				=  'regexp://.*'
+    ANY				    =  'regexp:.'
   ]
 
 }
 Program          ::= Def_                                              // Start Symbol - BlockExpr ???
 
-digit            ::=  zero | nonZeroDigit
-letter           ::=  upper | lower // and Unicode categories Lo, Lt, Nl
+digit            ::=  ZERO | NONZERODIGIT
+letter           ::=  UPPER | LOWER // and Unicode categories Lo, Lt, Nl
 paren            ::=  '(' | ')' | '[' | ']' | '{' | '}'
 delim            ::=  "'" | '"' | '.' | ';' | ','
-opchar           ::=  letter                                           // !(space | upper | lower | digit | paren | delim) any -> letter
+opchar           ::=  letter                                           // !(space | UPPER | LOWER | digit | paren | delim) any -> letter
 printableChar    ::= // all characters in [\u0020, \u007F] inclusive
 charEscapeSeq    ::= '\' ('b' | 't' | 'n' | 'f' | 'r' | '"' | "'" | '\')
 
 op               ::=  opchar {opchar} *
-varid            ::=  lower idrest
-plainid          ::=  upper idrest
+varid            ::=  LOWER idrest
+plainid          ::=  UPPER idrest
                  |  varid
                  |  op
 id               ::=  plainid
@@ -116,14 +116,14 @@ id               ::=  plainid
 idrest           ::=  {letter | digit} * ['_' op]
 
 integerLiteral   ::=  (decimalNumeral | hexNumeral) [L]
-hexNumeral       ::=  '0' HEX hexDigit {hexDigit} *
-decimalNumeral   ::=  '0' | nonZeroDigit {digit} *
+hexNumeral       ::=  '0' HEX HEXDIGIT {HEXDIGIT} *
+decimalNumeral   ::=  '0' | NONZERODIGIT {digit} *
 
 floatingPointLiteral
-                 ::=  digit {digit} * '.' digit {digit} * [exponentPart] [floatType]
-                 |  '.' digit {digit} * [exponentPart] [floatType]
-                 |  digit {digit} * exponentPart [floatType]
-                 |  digit {digit} * [exponentPart] floatType
+                 ::=  digit {digit} * '.' digit {digit} * [exponentPart] [FLOATTYPE]
+                 |  '.' digit {digit} * [exponentPart] [FLOATTYPE]
+                 |  digit {digit} * exponentPart [FLOATTYPE]
+                 |  digit {digit} * [exponentPart] FLOATTYPE
 exponentPart     ::=  EXP ['+' | '-'] digit {digit} *
 
 booleanLiteral   ::=  'true' | 'false'
@@ -137,7 +137,7 @@ multiLineChars   ::=  {['"'] ['"'] letter} * {'"'} *        // charNoDoubleQuote
 
 symbolLiteral    ::=  "'" plainid
 
-nl               ::=  crlf
+nl               ::=  CRLF
 
 
 semi             ::=  ';' |  nl {nl} *
@@ -214,10 +214,20 @@ SimpleType_	      ::= TypeArgs SimpleType_
 //-----------------------------------------------------------------
 TypeArgs          ::=  '[' Types ']'
 Types             ::=  Type_ {',' Type_} *
-Refinement        ::=  [nl] '{' RefineStat {semi RefineStat} * '}'
+
+//-----------------------------------------------------------------
+/*Refinement        ::=  [nl] '{' RefineStat {semi RefineStat} * '}'
 RefineStat        ::=  Dcl
                   |  'type' TypeDef
-                  |
+                  |*/
+Refinement        ::=  [nl] '{' RefineStat {semi RefineStat} * '}'
+                  |  [nl] '{' {semi RefineStat} * '}'
+                  |  [nl] '{' RefineStat {semi} * '}'
+                  |  [nl] '{' {semi} * '}'
+RefineStat        ::=  Dcl
+                  |  'type' TypeDef
+//-----------------------------------------------------------------
+
 TypePat           ::=  Type_
 
 Ascription        ::=  ':' InfixType
@@ -250,7 +260,7 @@ InfixExpr_	      ::= id [nl] InfixExpr InfixExpr_
 
 PrefixExpr        ::=  ['-' | '+' | '~' | '!'] SimpleExpr
 
-//commit 975599----------------------------------------------------
+//commit 6d297d----------------------------------------------------
 /*SimpleExpr        ::=  'new' (ClassTemplate | TemplateBody)
                   |  BlockExpr
                   |  SimpleExpr1 ['_']
@@ -262,45 +272,38 @@ SimpleExpr1       ::=  Literal
                   |  SimpleExpr TypeArgs
                   |  SimpleExpr1 ArgumentExprs
                   //|  XmlExpr  */                                                                                      //!!!
-SimpleExpr ::=	'new' (ClassTemplate
-|	TemplateBody)
-|	BlockExpr
-|	SimpleExpr1
-|	SimpleExpr1 '_'
+SimpleExpr        ::=	'new' (ClassTemplate | TemplateBody)
+                  |	BlockExpr
+                  |	SimpleExpr1
+                  |	SimpleExpr1 '_'
 
-SimpleExpr1 ::=	Literal
-|	Literal SimpleExpr13
-|	Path
-|	Path SimpleExpr13
-|	'_'
-|	'_' SimpleExpr13
-|	'(' ')'
-|	'(' ')' SimpleExpr13
-|	'(' Exprs ')'
-|	'(' Exprs ')' SimpleExpr13
-|	'new' (ClassTemplate '.' id
-|	'new' (ClassTemplate '.' id SimpleExpr13
-|	TemplateBody) '.' id
-|	TemplateBody) '.' id SimpleExpr13
-|	BlockExpr '.' id
-|	BlockExpr '.' id SimpleExpr13
-|	'new' (ClassTemplate TypeArgs
-|	'new' (ClassTemplate TypeArgs SimpleExpr13
-|	TemplateBody) TypeArgs
-|	TemplateBody) TypeArgs SimpleExpr13
-|	BlockExpr TypeArgs
-|	BlockExpr TypeArgs SimpleExpr13
+SimpleExpr1       ::=	Literal
+                  |	Literal SimpleExpr13
+                  |	Path
+                  |	Path SimpleExpr13
+                  |	'_'
+                  |	'_' SimpleExpr13
+                  |	'(' ')'
+                  |	'(' ')' SimpleExpr13
+                  |	'(' Exprs ')'
+                  |	'(' Exprs ')' SimpleExpr13
+                  |	'new' (ClassTemplate '.' id | 'new' (ClassTemplate '.' id SimpleExpr13 | TemplateBody) '.' id | TemplateBody) '.' id SimpleExpr13
+                  |	BlockExpr '.' id
+                  |	BlockExpr '.' id SimpleExpr13
+                  |	'new' (ClassTemplate TypeArgs |	'new' (ClassTemplate TypeArgs SimpleExpr13 | TemplateBody) TypeArgs | TemplateBody) TypeArgs SimpleExpr13
+                  |	BlockExpr TypeArgs
+                  |	BlockExpr TypeArgs SimpleExpr13
 
-SimpleExpr13 ::=	'.' id
-|	'.' id SimpleExpr13
-|	'_' '.' id
-|	'_' '.' id SimpleExpr13
-|	TypeArgs
-|	TypeArgs SimpleExpr13
-|	'_' TypeArgs
-|	'_' TypeArgs SimpleExpr13
-|	ArgumentExprs
-|	ArgumentExprs SimpleExpr13
+SimpleExpr13      ::=	'.' id
+                  |	'.' id SimpleExpr13
+                  |	'_' '.' id
+                  |	'_' '.' id SimpleExpr13
+                  |	TypeArgs
+                  |	TypeArgs SimpleExpr13
+                  |	'_' TypeArgs
+                  |	'_' TypeArgs SimpleExpr13
+                  |	ArgumentExprs
+                  |	ArgumentExprs SimpleExpr13
 
 
 //-----------------------------------------------------------------
@@ -310,7 +313,7 @@ ArgumentExprs     ::=  '(' [Exprs] ')'
                   |  [nl] BlockExpr
 BlockExpr         ::=  '{' CaseClauses '}'
                   |  '{' Block '}'
-//commit 975599----------------------------------------------------
+//commit 6d297d----------------------------------------------------
 /*Block             ::=  BlockStat {semi BlockStat} * [ResultExpr]
 BlockStat         ::=  Import_
                   |  {Annotation} * ['implicit' | 'lazy'] Def_
@@ -386,13 +389,22 @@ AccessQualifier   ::=  '[' (id | 'this') ']'
 
 Annotation        ::=  '@' SimpleType {ArgumentExprs} *
 ConstrAnnotation  ::=  '@' SimpleType ArgumentExprs
-
-TemplateBody      ::=  [nl] '{' [SelfType] TemplateStat {semi TemplateStat} * '}'
+//-----------------------------------------------------------------
+/*TemplateBody      ::=  [nl] '{' [SelfType] TemplateStat {semi TemplateStat} * '}'
 TemplateStat      ::=  Import_
                   |  {Annotation [nl]} * {Modifier} * Def_
                   |  {Annotation [nl]} * {Modifier} * Dcl
                   |  Expr
-                  |
+                  |*/
+TemplateBody      ::=  [nl] '{' [SelfType] TemplateStat {semi TemplateStat} * '}'
+                  |  [nl] '{' [SelfType] {semi TemplateStat} * '}'
+                  |  [nl] '{' [SelfType] TemplateStat {semi} * '}'
+                  |  [nl] '{' [SelfType] {semi} * '}'
+TemplateStat      ::=  Import_
+                  |  {Annotation [nl]} * {Modifier} * Def_
+                  |  {Annotation [nl]} * {Modifier} * Dcl
+                  |  Expr
+//-----------------------------------------------------------------
 SelfType          ::=  id [':' Type_] '=>'
                   |  'this' ':' Type_ '=>'
 
@@ -446,13 +458,15 @@ EarlyDef          ::=  {Annotation [nl]} * {Modifier} * PatVarDef
 
 ConstrExpr        ::=  SelfInvocation
                   |  ConstrBlock
-//commit 975599----------------------------------------------------
+//commit 6d297d----------------------------------------------------
 /*ConstrBlock       ::=  '{' SelfInvocation {semi BlockStat} * '}'*/
 ConstrBlock       ::=  '{' SelfInvocation {semi [BlockStat]} * '}'
 //-----------------------------------------------------------------
+
 SelfInvocation    ::=  'this' ArgumentExprs {ArgumentExprs} *
 
-TopStatSeq        ::=  TopStat {semi TopStat} *
+//-----------------------------------------------------------------
+/*TopStatSeq        ::=  TopStat {semi TopStat} *
 TopStat           ::=  {Annotation [nl]} * {Modifier} * TmplDef
                   |  Import_
                   |  Packaging
@@ -461,5 +475,23 @@ TopStat           ::=  {Annotation [nl]} * {Modifier} * TmplDef
 Packaging         ::=  'package' QualId [nl] '{' TopStatSeq '}'
 PackageObject     ::=  'package' 'object' ObjectDef
 
+CompilationUnit   ::=  {'package' QualId semi} * TopStatSeq*/
+
+
+TopStatSeq        ::=  TopStat {semi TopStat} *
+                  |  TopStat {semi} *
+                  |  semi +
+                  |  {semi TopStat} *
+TopStat           ::=  {Annotation [nl]} * {Modifier} * TmplDef
+                  |  Import_
+                  |  Packaging
+                  |  PackageObject
+
+Packaging         ::=  'package' QualId [nl] '{' TopStatSeq '}'
+                  |  'package' QualId [nl] '{' '}'
+
+PackageObject     ::=  'package' 'object' ObjectDef
+
 CompilationUnit   ::=  {'package' QualId semi} * TopStatSeq
+//-----------------------------------------------------------------
 
