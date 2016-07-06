@@ -250,30 +250,11 @@ InfixExpr_	      ::= id [nl] InfixExpr InfixExpr_
 
 PrefixExpr        ::=  ['-' | '+' | '~' | '!'] SimpleExpr
 
-//-----------------------------------------------------------------
+//commit 975599----------------------------------------------------
 /*SimpleExpr        ::=  'new' (ClassTemplate | TemplateBody)
                   |  BlockExpr
-                  |  SimpleExpr1 ['_']*/
-
-SimpleExpr        ::=  'new' (ClassTemplate | TemplateBody) SimpleExpr_
-                  |  BlockExpr SimpleExpr_
-                  | Literal SimpleExpr1_ ['_'] SimpleExpr_
-                  |  Path SimpleExpr1_ ['_'] SimpleExpr_
-                  |  '_' SimpleExpr1_ ['_'] SimpleExpr_
-                  |  '(' [Exprs] ')' SimpleExpr1_ ['_'] SimpleExpr_
-                  |  'new' (ClassTemplate | TemplateBody)
-                  |  BlockExpr
-                  |  Literal SimpleExpr1_ ['_']
-                  |  Path SimpleExpr1_ ['_']
-                  |  '_' SimpleExpr1_ ['_']
-                  |  '(' [Exprs] ')' SimpleExpr1_ ['_']
-
-SimpleExpr_       ::= '.' id SimpleExpr1_ ['_'] SimpleExpr_
-                  |  TypeArgs SimpleExpr1_ ['_'] SimpleExpr_
-                  |  '.' id SimpleExpr1_ ['_']
-                  |  TypeArgs SimpleExpr1_ ['_']
-
-/*SimpleExpr1       ::=  Literal
+                  |  SimpleExpr1 ['_']
+SimpleExpr1       ::=  Literal
                   |  Path
                   |  '_'
                   |  '(' [Exprs] ')'
@@ -281,21 +262,47 @@ SimpleExpr_       ::= '.' id SimpleExpr1_ ['_'] SimpleExpr_
                   |  SimpleExpr TypeArgs
                   |  SimpleExpr1 ArgumentExprs
                   //|  XmlExpr  */                                                                                      //!!!
-SimpleExpr1       ::=  Literal SimpleExpr1_
-                  |  Path SimpleExpr1_
-                  |  '_' SimpleExpr1_
-                  |  '(' [Exprs] ')' SimpleExpr1_
-                  |  SimpleExpr '.' id SimpleExpr1_
-                  |  SimpleExpr TypeArgs SimpleExpr1_
-                  |  Literal
-                  |  Path
-                  |  '_'
-                  |  '(' [Exprs] ')'
-                  |  SimpleExpr '.' id
-                  |  SimpleExpr TypeArgs
+SimpleExpr ::=	'new' (ClassTemplate
+|	TemplateBody)
+|	BlockExpr
+|	SimpleExpr1
+|	SimpleExpr1 '_'
 
-SimpleExpr1_      ::= ArgumentExprs SimpleExpr1_
-                  |  ArgumentExprs
+SimpleExpr1 ::=	Literal
+|	Literal SimpleExpr13
+|	Path
+|	Path SimpleExpr13
+|	'_'
+|	'_' SimpleExpr13
+|	'(' ')'
+|	'(' ')' SimpleExpr13
+|	'(' Exprs ')'
+|	'(' Exprs ')' SimpleExpr13
+|	'new' (ClassTemplate '.' id
+|	'new' (ClassTemplate '.' id SimpleExpr13
+|	TemplateBody) '.' id
+|	TemplateBody) '.' id SimpleExpr13
+|	BlockExpr '.' id
+|	BlockExpr '.' id SimpleExpr13
+|	'new' (ClassTemplate TypeArgs
+|	'new' (ClassTemplate TypeArgs SimpleExpr13
+|	TemplateBody) TypeArgs
+|	TemplateBody) TypeArgs SimpleExpr13
+|	BlockExpr TypeArgs
+|	BlockExpr TypeArgs SimpleExpr13
+
+SimpleExpr13 ::=	'.' id
+|	'.' id SimpleExpr13
+|	'_' '.' id
+|	'_' '.' id SimpleExpr13
+|	TypeArgs
+|	TypeArgs SimpleExpr13
+|	'_' TypeArgs
+|	'_' TypeArgs SimpleExpr13
+|	ArgumentExprs
+|	ArgumentExprs SimpleExpr13
+
+
 //-----------------------------------------------------------------
 Exprs             ::=  Expr {',' Expr} *
 ArgumentExprs     ::=  '(' [Exprs] ')'
@@ -303,12 +310,19 @@ ArgumentExprs     ::=  '(' [Exprs] ')'
                   |  [nl] BlockExpr
 BlockExpr         ::=  '{' CaseClauses '}'
                   |  '{' Block '}'
-Block             ::=  BlockStat {semi BlockStat} * [ResultExpr]
+//commit 975599----------------------------------------------------
+/*Block             ::=  BlockStat {semi BlockStat} * [ResultExpr]
 BlockStat         ::=  Import_
                   |  {Annotation} * ['implicit' | 'lazy'] Def_
                   |  {Annotation} * {LocalModifier} * TmplDef
                   |  Expr1
-                  |
+                  |*/
+Block             ::=  [BlockStat] {semi [BlockStat]} * [ResultExpr]
+BlockStat         ::=  Import_
+                  |  {Annotation} * ['implicit' | 'lazy'] Def_
+                  |  {Annotation} * {LocalModifier} * TmplDef
+                  |  Expr1
+//-----------------------------------------------------------------
 ResultExpr        ::=  Expr1
                   |  (Bindings | (['implicit'] id | '_') ':' CompoundType) '=>' Block
 
@@ -432,7 +446,10 @@ EarlyDef          ::=  {Annotation [nl]} * {Modifier} * PatVarDef
 
 ConstrExpr        ::=  SelfInvocation
                   |  ConstrBlock
-ConstrBlock       ::=  '{' SelfInvocation {semi BlockStat} * '}'
+//commit 975599----------------------------------------------------
+/*ConstrBlock       ::=  '{' SelfInvocation {semi BlockStat} * '}'*/
+ConstrBlock       ::=  '{' SelfInvocation {semi [BlockStat]} * '}'
+//-----------------------------------------------------------------
 SelfInvocation    ::=  'this' ArgumentExprs {ArgumentExprs} *
 
 TopStatSeq        ::=  TopStat {semi TopStat} *
