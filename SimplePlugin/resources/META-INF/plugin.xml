@@ -1,5 +1,5 @@
 <idea-plugin version="2">
-  <id>com.your.company.unique.plugin.id</id>
+  <id>com.your.company.unique.plugin.id1</id>
   <name>SimpleLanguage</name>
   <version>1.0</version>
   <vendor email="ilnur.shugaepov@jetbrains.com" url="http://www.jetbrains.com">JetBrains</vendor>
