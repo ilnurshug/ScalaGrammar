@@ -15,14 +15,9 @@
   tokens=[
     UPPER				=  'regexp:[A-Z]'
     LOWER				=  'regexp:[a-z]'
-    L				    =  'regexp:[lL]'
-    FLOATTYPE			=  'regexp:[fFdD]'
-    EXP				    =  'regexp:[eE]'
-    HEX				    =  'regexp:[xX]'
-    CRLF				=  'regexp:\n|\r|\r\n'
+    CRLF				=  'regexp:(\n|\r|\r\n)'
     ZERO				=  '0'
     NONZERODIGIT		=  'regexp:[1-9]'
-    HEXDIGIT			=  'regexp:[0-9a-fA-F]'
     LEFT_BRACE			=  "{"
     RIGHT_BRACE			=  "}"
     LEFT_BRACKET		=  "["
@@ -91,6 +86,21 @@
     OP_2				=  '-'
     OP_3				=  '*'
     OP_4				=  '/'
+
+
+    /*digit               =  'regexp:[0-9]'
+    letter              =  'regexp:[a-zA-Z]'
+    opchar              =  'regexp:[a-zA-Z]'            // !(space | UPPER | LOWER | digit | paren | delim) any -> letter
+    op                  =  'regexp:[a-zA-Z]+'
+    idrest              =  'regexp:[0-9a-zA-Z]*(_|[a-zA-Z]+)?'
+    varid               =  'regexp:[a-z][0-9a-zA-Z]*(_|[a-zA-Z]+)?'
+    plainid             =  'regexp:([A-Z][0-9a-zA-Z]*(_|[a-zA-Z]+)?)|([a-z][0-9a-zA-Z]*(_|[a-zA-Z]+)?)|([a-zA-Z]+)'
+    */
+
+    hexNumeral          =  'regexp:0[xX][0-9a-fA-F]+'
+    decimalNumeral      =  'regexp:(0|[1-9][0-9]*)'
+    floatingPointLiteral=  'regexp:[-+]?[0-9]*\.?[0-9]+([eE][-+]?[0-9]+)?'
+
     COMMENT				=  'regexp://.*'
     ANY				    =  'regexp:.'
   ]
@@ -100,11 +110,11 @@ Program          ::= Def_                                              // Start 
 
 digit            ::=  ZERO | NONZERODIGIT
 letter           ::=  UPPER | LOWER // and Unicode categories Lo, Lt, Nl
-paren            ::=  '(' | ')' | '[' | ']' | '{' | '}'
-delim            ::=  "'" | '"' | '.' | ';' | ','
+//paren            ::=  '(' | ')' | '[' | ']' | '{' | '}'
+//delim            ::=  "'" | '"' | '.' | ';' | ','
 opchar           ::=  letter                                           // !(space | UPPER | LOWER | digit | paren | delim) any -> letter
-printableChar    ::= // all characters in [\u0020, \u007F] inclusive
-charEscapeSeq    ::= '\' ('b' | 't' | 'n' | 'f' | 'r' | '"' | "'" | '\')
+//printableChar    ::= // all characters in [\u0020, \u007F] inclusive
+//charEscapeSeq    ::= '\' ('b' | 't' | 'n' | 'f' | 'r' | '"' | "'" | '\')
 
 op               ::=  opchar {opchar} *
 varid            ::=  LOWER idrest
@@ -115,16 +125,7 @@ id               ::=  plainid
                  |  "'" stringLiteral "'"
 idrest           ::=  {letter | digit} * ['_' op]
 
-integerLiteral   ::=  (decimalNumeral | hexNumeral) [L]
-hexNumeral       ::=  '0' HEX HEXDIGIT {HEXDIGIT} *
-decimalNumeral   ::=  '0' | NONZERODIGIT {digit} *
-
-floatingPointLiteral
-                 ::=  digit {digit} * '.' digit {digit} * [exponentPart] [FLOATTYPE]
-                 |  '.' digit {digit} * [exponentPart] [FLOATTYPE]
-                 |  digit {digit} * exponentPart [FLOATTYPE]
-                 |  digit {digit} * [exponentPart] FLOATTYPE
-exponentPart     ::=  EXP ['+' | '-'] digit {digit} *
+integerLiteral   ::=  (decimalNumeral | hexNumeral) 
 
 booleanLiteral   ::=  'true' | 'false'
 
@@ -215,7 +216,7 @@ SimpleType_	      ::= TypeArgs SimpleType_
 TypeArgs          ::=  '[' Types ']'
 Types             ::=  Type_ {',' Type_} *
 
-//-----------------------------------------------------------------
+//commit f2b00a----------------------------------------------------
 /*Refinement        ::=  [nl] '{' RefineStat {semi RefineStat} * '}'
 RefineStat        ::=  Dcl
                   |  'type' TypeDef
@@ -389,7 +390,7 @@ AccessQualifier   ::=  '[' (id | 'this') ']'
 
 Annotation        ::=  '@' SimpleType {ArgumentExprs} *
 ConstrAnnotation  ::=  '@' SimpleType ArgumentExprs
-//-----------------------------------------------------------------
+//commit f2b00a----------------------------------------------------
 /*TemplateBody      ::=  [nl] '{' [SelfType] TemplateStat {semi TemplateStat} * '}'
 TemplateStat      ::=  Import_
                   |  {Annotation [nl]} * {Modifier} * Def_
@@ -465,7 +466,7 @@ ConstrBlock       ::=  '{' SelfInvocation {semi [BlockStat]} * '}'
 
 SelfInvocation    ::=  'this' ArgumentExprs {ArgumentExprs} *
 
-//-----------------------------------------------------------------
+//commit f2b00a----------------------------------------------------
 /*TopStatSeq        ::=  TopStat {semi TopStat} *
 TopStat           ::=  {Annotation [nl]} * {Modifier} * TmplDef
                   |  Import_
