@@ -13,11 +13,11 @@
   tokenTypeClass="com.alacsplugin.psi.AlacsTokenType"
 
   tokens=[
-    UPPER				=  'regexp:[A-Z]'
-    LOWER				=  'regexp:[a-z]'
+    //UPPER				=  'regexp:[A-Z]'
+    //LOWER				=  'regexp:[a-z]'
     CRLF				=  'regexp:(\n|\r|\r\n)'
-    ZERO				=  '0'
-    NONZERODIGIT		=  'regexp:[1-9]'
+    //ZERO				=  '0'
+    //NONZERODIGIT		=  'regexp:[1-9]'
     LEFT_BRACE			=  "{"
     RIGHT_BRACE			=  "}"
     LEFT_BRACKET		=  "["
@@ -82,59 +82,57 @@
     WHILE				=  "while"
     WITH				=  "with"
     YIELD				=  "yield"
+
+
+    hexNumeral          =  'regexp:0[xX][0-9a-fA-F]+'
+    decimalNumeral      =  'regexp:(0|[1-9][0-9]*)'
+    floatingPointLiteral=  'regexp:[0-9]*\.?[0-9]+([eE][-+]?[0-9]+)?'
+
+    //SPACE               =  'regexp:\s'
+
+    plainid_regex       =  "regexp:[A-Z]([0-9a-zA-Z]*)(_[^a-zA-Z0-9()\[\]{}\.;,\s\'\"]+)?"
+    varid_regex         =  "regexp:[a-z]([0-9a-zA-Z]*)(_[^a-zA-Z0-9()\[\]{}\.;,\s\'\"]+)?"
+    op_regex            =  "regexp:[^a-zA-Z0-9()\[\]{}\.;,\s\'\"]+"
+
     OP_1				=  '+'
     OP_2				=  '-'
     OP_3				=  '*'
     OP_4				=  '/'
-
-
-    /*digit               =  'regexp:[0-9]'
-    letter              =  'regexp:[a-zA-Z]'
-    opchar              =  'regexp:[a-zA-Z]'            // !(space | UPPER | LOWER | digit | paren | delim) any -> letter
-    op                  =  'regexp:[a-zA-Z]+'
-    idrest              =  'regexp:[0-9a-zA-Z]*(_|[a-zA-Z]+)?'
-    varid               =  'regexp:[a-z][0-9a-zA-Z]*(_|[a-zA-Z]+)?'
-    plainid             =  'regexp:([A-Z][0-9a-zA-Z]*(_|[a-zA-Z]+)?)|([a-z][0-9a-zA-Z]*(_|[a-zA-Z]+)?)|([a-zA-Z]+)'
-    */
-
-    hexNumeral          =  'regexp:0[xX][0-9a-fA-F]+'
-    decimalNumeral      =  'regexp:(0|[1-9][0-9]*)'
-    floatingPointLiteral=  'regexp:[-+]?[0-9]*\.?[0-9]+([eE][-+]?[0-9]+)?'
 
     COMMENT				=  'regexp://.*'
     ANY				    =  'regexp:.'
   ]
 
 }
-Program          ::= Def_                                              // Start Symbol - BlockExpr ???
+Program          ::= BlockExpr                                              // Start Symbol - BlockExpr ???
 
-digit            ::=  ZERO | NONZERODIGIT
-letter           ::=  UPPER | LOWER // and Unicode categories Lo, Lt, Nl
-//paren            ::=  '(' | ')' | '[' | ']' | '{' | '}'
-//delim            ::=  "'" | '"' | '.' | ';' | ','
-opchar           ::=  letter                                           // !(space | UPPER | LOWER | digit | paren | delim) any -> letter
+//digit            ::=  decimalNumeral //ZERO | NONZERODIGIT
+//letter           ::=  UPPER | LOWER
+/*paren            ::=  '(' | ')' | '[' | ']' | '{' | '}'
+delim            ::=  "'" | '"' | '.' | ';' | ','
+opchar           ::=  (!UPPER | !LOWER | !digit | !paren | !delim) any //(!SPACE | !UPPER | !LOWER | !digit | !paren | !delim) any*/
 //printableChar    ::= // all characters in [\u0020, \u007F] inclusive
 //charEscapeSeq    ::= '\' ('b' | 't' | 'n' | 'f' | 'r' | '"' | "'" | '\')
 
-op               ::=  opchar {opchar} *
-varid            ::=  LOWER idrest
-plainid          ::=  UPPER idrest
+op               ::=  op_regex          //opchar {opchar} *
+varid            ::=  varid_regex       //LOWER idrest
+plainid          ::=  plainid_regex     //UPPER idrest
                  |  varid
                  |  op
 id               ::=  plainid
-                 |  "'" stringLiteral "'"
-idrest           ::=  {letter | digit} * ['_' op]
+                 //|  "'" stringLiteral "'"
+//idrest           ::=  {letter | digit} * ['_' op]
 
 integerLiteral   ::=  (decimalNumeral | hexNumeral) 
 
 booleanLiteral   ::=  'true' | 'false'
 
-characterLiteral ::=  "'" letter "'"                        // (charNoQuoteOrNewline | UnicodeEscape | charEscapeSeq) -> letter
+//characterLiteral ::=  "'" letter "'"                        // (charNoQuoteOrNewline | UnicodeEscape | charEscapeSeq) -> letter
 
-stringLiteral    ::=  '"' {stringElement} * '"'
-                 |  '"""' multiLineChars '"""'
-stringElement    ::=  letter                                // charNoDoubleQuoteOrNewline | UnicodeEscape | charEscapeSeq -> letter
-multiLineChars   ::=  {['"'] ['"'] letter} * {'"'} *        // charNoDoubleQuote -> letter
+/*stringLiteral    ::=  '"' {stringElement} * '"'
+                 |  '"""' multiLineChars '"""'*/
+//stringElement    ::=  letter                                // charNoDoubleQuoteOrNewline | UnicodeEscape | charEscapeSeq -> letter
+//multiLineChars   ::=  {['"'] ['"'] letter} * {'"'} *        // charNoDoubleQuote -> letter
 
 symbolLiteral    ::=  "'" plainid
 
@@ -146,8 +144,8 @@ semi             ::=  ';' |  nl {nl} *
 Literal           ::=  ['-'] integerLiteral
                   |  ['-'] floatingPointLiteral
                   |  booleanLiteral
-                  |  characterLiteral
-                  |  stringLiteral
+                  /*|  characterLiteral
+                  |  stringLiteral*/
                   |  symbolLiteral
                   |  'null'
 
@@ -278,33 +276,33 @@ SimpleExpr        ::=	'new' (ClassTemplate | TemplateBody)
                   |	SimpleExpr1
                   |	SimpleExpr1 '_'
 
-SimpleExpr1       ::=	Literal
-                  |	Literal SimpleExpr13
-                  |	Path
+SimpleExpr1       ::=	Literal SimpleExpr13
+                  |	Literal
                   |	Path SimpleExpr13
-                  |	'_'
+                  |	Path
                   |	'_' SimpleExpr13
-                  |	'(' ')'
+                  |	'_'
                   |	'(' ')' SimpleExpr13
-                  |	'(' Exprs ')'
+                  |	'(' ')'
                   |	'(' Exprs ')' SimpleExpr13
+                  |	'(' Exprs ')'
                   |	'new' (ClassTemplate '.' id | 'new' (ClassTemplate '.' id SimpleExpr13 | TemplateBody) '.' id | TemplateBody) '.' id SimpleExpr13
-                  |	BlockExpr '.' id
                   |	BlockExpr '.' id SimpleExpr13
+                  |	BlockExpr '.' id
                   |	'new' (ClassTemplate TypeArgs |	'new' (ClassTemplate TypeArgs SimpleExpr13 | TemplateBody) TypeArgs | TemplateBody) TypeArgs SimpleExpr13
-                  |	BlockExpr TypeArgs
                   |	BlockExpr TypeArgs SimpleExpr13
+                  |	BlockExpr TypeArgs
 
-SimpleExpr13      ::=	'.' id
-                  |	'.' id SimpleExpr13
-                  |	'_' '.' id
+SimpleExpr13      ::=	'.' id SimpleExpr13
+                  |	'.' id
                   |	'_' '.' id SimpleExpr13
-                  |	TypeArgs
+                  |	'_' '.' id
                   |	TypeArgs SimpleExpr13
-                  |	'_' TypeArgs
+                  |	TypeArgs
                   |	'_' TypeArgs SimpleExpr13
-                  |	ArgumentExprs
+                  |	'_' TypeArgs
                   |	ArgumentExprs SimpleExpr13
+                  |	ArgumentExprs
 
 
 //-----------------------------------------------------------------
