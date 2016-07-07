@@ -13,6 +13,9 @@
   tokenTypeClass="com.alacsplugin.psi.AlacsTokenType"
 
   tokens=[
+    characterLiteralRE  = "regexp:\'[a-zA-Z]\'"
+    stringLiteralRE     = "regexp:\"[a-zA-Z ]*\""
+
     //UPPER				=  'regexp:[A-Z]'
     //LOWER				=  'regexp:[a-z]'
     CRLF				=  'regexp:(\n|\r|\r\n)'
@@ -127,8 +130,8 @@ integerLiteral   ::=  (decimalNumeral | hexNumeral)
 
 booleanLiteral   ::=  'true' | 'false'
 
-//characterLiteral ::=  "'" letter "'"                        // (charNoQuoteOrNewline | UnicodeEscape | charEscapeSeq) -> letter
-
+characterLiteral ::=  characterLiteralRE //"'" letter "'"                        // (charNoQuoteOrNewline | UnicodeEscape | charEscapeSeq) -> letter
+stringLiteral    ::=  stringLiteralRE
 /*stringLiteral    ::=  '"' {stringElement} * '"'
                  |  '"""' multiLineChars '"""'*/
 //stringElement    ::=  letter                                // charNoDoubleQuoteOrNewline | UnicodeEscape | charEscapeSeq -> letter
@@ -144,8 +147,8 @@ semi             ::=  ';' |  nl {nl} *
 Literal           ::=  ['-'] integerLiteral
                   |  ['-'] floatingPointLiteral
                   |  booleanLiteral
-                  /*|  characterLiteral
-                  |  stringLiteral*/
+                  |  characterLiteral
+                  |  stringLiteral
                   |  symbolLiteral
                   |  'null'
 
@@ -276,32 +279,32 @@ SimpleExpr        ::=	'new' (ClassTemplate | TemplateBody)
                   |	SimpleExpr1
                   |	SimpleExpr1 '_'
 
-SimpleExpr1       ::=	Literal SimpleExpr13
+SimpleExpr1       ::=	Literal SimpleExpr2
                   |	Literal
-                  |	Path SimpleExpr13
+                  |	Path SimpleExpr2
                   |	Path
-                  |	'_' SimpleExpr13
+                  |	'_' SimpleExpr2
                   |	'_'
-                  |	'(' ')' SimpleExpr13
+                  |	'(' ')' SimpleExpr2
                   |	'(' ')'
-                  |	'(' Exprs ')' SimpleExpr13
+                  |	'(' Exprs ')' SimpleExpr2
                   |	'(' Exprs ')'
-                  |	'new' (ClassTemplate '.' id | 'new' (ClassTemplate '.' id SimpleExpr13 | TemplateBody) '.' id | TemplateBody) '.' id SimpleExpr13
-                  |	BlockExpr '.' id SimpleExpr13
+                  |	'new' (ClassTemplate '.' id | 'new' (ClassTemplate '.' id SimpleExpr2 | TemplateBody) '.' id | TemplateBody) '.' id SimpleExpr2
+                  |	BlockExpr '.' id SimpleExpr2
                   |	BlockExpr '.' id
-                  |	'new' (ClassTemplate TypeArgs |	'new' (ClassTemplate TypeArgs SimpleExpr13 | TemplateBody) TypeArgs | TemplateBody) TypeArgs SimpleExpr13
-                  |	BlockExpr TypeArgs SimpleExpr13
+                  |	'new' (ClassTemplate TypeArgs |	'new' (ClassTemplate TypeArgs SimpleExpr2 | TemplateBody) TypeArgs | TemplateBody) TypeArgs SimpleExpr2
+                  |	BlockExpr TypeArgs SimpleExpr2
                   |	BlockExpr TypeArgs
 
-SimpleExpr13      ::=	'.' id SimpleExpr13
+SimpleExpr2      ::=	'.' id SimpleExpr2
                   |	'.' id
-                  |	'_' '.' id SimpleExpr13
+                  |	'_' '.' id SimpleExpr2
                   |	'_' '.' id
-                  |	TypeArgs SimpleExpr13
+                  |	TypeArgs SimpleExpr2
                   |	TypeArgs
-                  |	'_' TypeArgs SimpleExpr13
+                  |	'_' TypeArgs SimpleExpr2
                   |	'_' TypeArgs
-                  |	ArgumentExprs SimpleExpr13
+                  |	ArgumentExprs SimpleExpr2
                   |	ArgumentExprs
 
 
