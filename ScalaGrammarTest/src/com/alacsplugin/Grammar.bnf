@@ -91,8 +91,6 @@
     decimalNumeral      =  'regexp:(0|[1-9][0-9]*)'
     floatingPointLiteral=  'regexp:[0-9]*\.?[0-9]+([eE][-+]?[0-9]+)?'
 
-    //SPACE               =  'regexp:\s'
-
     plainid_regex       =  "regexp:[A-Z]([0-9a-zA-Z]*)(_[^a-zA-Z0-9()\[\]{}\.;,\s\'\"]+)?"
     varid_regex         =  "regexp:[a-z]([0-9a-zA-Z]*)(_[^a-zA-Z0-9()\[\]{}\.;,\s\'\"]+)?"
     op_regex            =  "regexp:[^a-zA-Z0-9()\[\]{}\.;,\s\'\"]+"
@@ -155,34 +153,33 @@ Literal           ::=  ['-'] integerLiteral
 QualId            ::=  id {'.' id} *
 ids               ::=  id {',' id} *
 //-----------------------------------------------------------------
-/*Path              ::=  StableId
-                  |  id '.' 'this'
-                  |  'this'*/
-
-Path              ::=  id Path_
-                  |  id '.' 'super' ClassQualifier '.' id Path_
-                  |  id '.' 'super' '.' id Path_
-                  |  'super' ClassQualifier '.' id Path_
-                  |  'super' '.' id Path_
-                  |  id '.' 'this' Path_
-                  |  'this' Path_
-                  |  id
-                  |  id '.' 'super' ClassQualifier '.' id
-                  |  id '.' 'super' '.' id
-                  |  'super' ClassQualifier '.' id
-                  |  'super' '.' id
-                  |  id '.' 'this'
-                  |  'this'
-
-Path_             ::= '.' id Path_
-                  |  '.' id
-
+/*Path            ::=  StableId
+                  |  [id ‘.’] ‘this’
 StableId          ::=  id
-                  |  Path '.' id
-                  |  id '.' 'super' ClassQualifier '.' id
-                  |  id '.' 'super' '.' id
-                  |  'super' ClassQualifier '.' id
-                  |  'super' '.' id
+                  |  Path ‘.’ id
+                  |  [id ‘.’] ‘super’ [ClassQualifier] ‘.’ id*/
+
+Path              ::=	StableId
+                  |	 id '.' 'this'
+                  |	 'this'
+
+StableId          ::=  id StableId1
+                  |	 id '.' 'this' '.' id StableId1
+                  |	 'this' '.' id StableId1
+                  |	 id '.' 'super' ClassQualifier '.' id StableId1
+                  |	 'super' ClassQualifier '.' id StableId1
+                  |	 id '.' 'super' '.' id StableId1
+                  |	 'super' '.' id StableId1
+                  |	 id '.' 'this' '.' id
+                  |	 'this' '.' id
+                  |	 id '.' 'super' ClassQualifier '.' id
+                  |	 'super' ClassQualifier '.' id
+                  |	 id '.' 'super' '.' id
+                  |	 'super' '.' id
+                  |  id
+
+StableId1         ::=  '.' id StableId1
+                  |  '.' id
 //-----------------------------------------------------------------
 ClassQualifier    ::=  '[' id ']'
 
@@ -247,9 +244,9 @@ Expr1             ::=  'if' '(' Expr ')' {nl} * Expr [[semi] 'else' Expr]
                   |  'return' [Expr]
                   |  [SimpleExpr '.'] id '=' Expr
                   |  SimpleExpr1 ArgumentExprs '=' Expr
-                  |  PostfixExpr
-                  |  PostfixExpr Ascription
                   |  PostfixExpr 'match' '{' CaseClauses '}'
+                  |  PostfixExpr Ascription
+                  |  PostfixExpr
 PostfixExpr       ::=  InfixExpr [id [nl]]
 //-----------------------------------------------------------------
 /*InfixExpr         ::=  PrefixExpr
@@ -276,8 +273,7 @@ SimpleExpr1       ::=  Literal
                   //|  XmlExpr  */                                                                                      //!!!
 SimpleExpr        ::=	'new' (ClassTemplate | TemplateBody)
                   |	BlockExpr
-                  |	SimpleExpr1
-                  |	SimpleExpr1 '_'
+                  |	SimpleExpr1 ['_']
 
 SimpleExpr1       ::=	Literal SimpleExpr2
                   |	Literal
@@ -344,15 +340,15 @@ Pattern1          ::=  varid ':' TypePat
                   |  Pattern2
 Pattern2          ::=  varid ['@' Pattern3]
                   |  Pattern3
-Pattern3          ::=  SimplePattern
-                  |  SimplePattern { id [nl] SimplePattern } *
+Pattern3          ::=  SimplePattern { id [nl] SimplePattern } *
+                  |  SimplePattern
 SimplePattern     ::=  '_'
+                  |  StableId '(' [Patterns ','] [varid '@'] '_' '*' ')'
+                  |  StableId '(' [Patterns] ')'
+                  |  StableId
+                  |  '(' [Patterns] ')'
                   |  varid
                   |  Literal
-                  |  StableId
-                  |  StableId '(' [Patterns] ')'
-                  |  StableId '(' [Patterns ','] [varid '@'] '_' '*' ')'
-                  |  '(' [Patterns] ')'
                   //|  XmlPattern                                                                                       //!!!
 Patterns          ::=  Pattern [',' Patterns]
                   |  '_' *
@@ -366,9 +362,15 @@ ParamClauses      ::=  {ParamClause} * [[nl] '(' 'implicit' Params ')']
 ParamClause       ::=  [nl] '(' [Params] ')'
 Params            ::=  Param {',' Param} *
 Param             ::=  {Annotation} * id [':' ParamType] ['=' Expr]
-ParamType         ::=  Type_
+//-----------------------------------------------------------------
+/*ParamType         ::=  Type_
                   |  '=>' Type_
-                  |  Type_ '*'
+                  |  Type_ '*'*/
+
+ParamType         ::=  Type_ '*'
+                  |  '=>' Type_
+                  |  Type_
+//-----------------------------------------------------------------
 ClassParamClauses ::=  {ClassParamClause} *
                      [[nl] '(' 'implicit' ClassParams ')']
 ClassParamClause  ::=  [nl] '(' [ClassParams] ')'

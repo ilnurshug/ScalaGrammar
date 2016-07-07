@@ -1,0 +1,23 @@
+{
+    def foo (n : Int) = {
+        if ( n <= 1) "a" 
+        else foo ( n - 1) + foo(n -2) + true
+    }
+    
+    def bar(n: Int, m:Int) = {
+        return n +
+        m 
+    }
+    
+    object MatchTest1 extends App {
+	  def matchTest(x: Int): String = foo match {   case 1 if x > y && z => doSomething()
+                                        case 1 if x > y => doSomethingElse()
+                                        case 1 => doSomethingElseEntirely()
+                                        case Address(Name(first, last), street, city, state, zip) => println(last + "a" + zip)
+                                        case _ => println("not an address") // the default case    
+                                      }
+	  println(matchTest(3))
+	}
+    
+
+}
