@@ -227,10 +227,16 @@ Types             ::=  Type_ {',' Type_} *
 RefineStat        ::=  Dcl
                   |  'type' TypeDef
                   |*/
-Refinement        ::=  [nl] '{' RefineStat {semi RefineStat} * '}'
-                  |  [nl] '{' {semi RefineStat} * '}'
-                  |  [nl] '{' RefineStat {semi} * '}'
-                  |  [nl] '{' {semi} * '}'
+Refinement        ::=  [nl] '{' RefineStat Refinement_ '}'
+                  |  [nl] '{' RefineStat '}'
+                  |  [nl] '{' Refinement_ '}'
+                  |  [nl] '{' '}'                 
+
+Refinement_	      ::=  semi + RefineStat Refinement_
+                  |  semi + RefineStat
+                  |  semi +
+
+
 RefineStat        ::=  Dcl
                   |  'type' TypeDef
 //-----------------------------------------------------------------
