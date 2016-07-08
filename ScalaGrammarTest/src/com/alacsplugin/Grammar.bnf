@@ -42,8 +42,6 @@
     SHARP				=  '#'
     AT				    =  '@'
     LLL				    =  '<%'
-    EPT				    =  '!'
-    TLD				    =  '~'
     SLASH				=  '\'
     ABSTRACT			=  "abstract"
     CASE				=  "case"
@@ -91,14 +89,17 @@
     decimalNumeral      =  'regexp:(0|[1-9][0-9]*)'
     floatingPointLiteral=  'regexp:[0-9]*\.?[0-9]+([eE][-+]?[0-9]+)?'
 
-    plainid_regex       =  "regexp:[A-Z]([0-9a-zA-Z]*)(_[^a-zA-Z0-9()\[\]{}\.;,\s\'\"]+)?"
-    varid_regex         =  "regexp:[a-z]([0-9a-zA-Z]*)(_[^a-zA-Z0-9()\[\]{}\.;,\s\'\"]+)?"
-    op_regex            =  "regexp:[^a-zA-Z0-9()\[\]{}\.;,\s\'\"]+"
-
     OP_1				=  '+'
     OP_2				=  '-'
     OP_3				=  '*'
     OP_4				=  '/'
+    EPT				    =  '!'
+    TLD				    =  '~'
+
+    plainid_regex       =  "regexp:[A-Z]([0-9a-zA-Z]*)(_[^a-zA-Z0-9()\[\]{}\.;,\s\'\"]+)?"
+    varid_regex         =  "regexp:[a-z]([0-9a-zA-Z]*)(_[^a-zA-Z0-9()\[\]{}\.;,\s\'\"]+)?"
+    op_regex            =  "regexp:[^a-zA-Z0-9()\[\]{}\.;,\s\'\"]+"
+
 
     COMMENT				=  'regexp://.*'
     ANY				    =  'regexp:.'
@@ -115,7 +116,14 @@ opchar           ::=  (!UPPER | !LOWER | !digit | !paren | !delim) any //(!SPACE
 //printableChar    ::= // all characters in [\u0020, \u007F] inclusive
 //charEscapeSeq    ::= '\' ('b' | 't' | 'n' | 'f' | 'r' | '"' | "'" | '\')
 
-op               ::=  op_regex          //opchar {opchar} *
+op               ::=  OP_1
+                 | OP_2
+                 | OP_3
+                 | OP_4
+                 | EPT
+                 | TLD
+                 | op_regex             //opchar {opchar} *
+
 varid            ::=  varid_regex       //LOWER idrest
 plainid          ::=  plainid_regex     //UPPER idrest
                  |  varid
@@ -238,6 +246,7 @@ Expr              ::=  (Bindings | ['implicit'] id | '_') '=>' Expr
 Expr1             ::=  'if' '(' Expr ')' {nl} * Expr [[semi] 'else' Expr]
                   |  'while' '(' Expr ')' {nl} * Expr
                   |  'try' ('{' Block '}' | Expr) ['catch' '{' CaseClauses '}'] ['finally' Expr]
+                  |  'try' ('{' '}' | Expr) ['catch' '{' CaseClauses '}'] ['finally' Expr]
                   |  'do' Expr [semi] 'while' '(' Expr ')'
                   |  'for' ('(' Enumerators ')' | '{' Enumerators '}') {nl} * ['yield'] Expr
                   |  'throw' Expr
@@ -292,7 +301,7 @@ SimpleExpr1       ::=	Literal SimpleExpr2
                   |	BlockExpr TypeArgs SimpleExpr2
                   |	BlockExpr TypeArgs
 
-SimpleExpr2      ::=	'.' id SimpleExpr2
+SimpleExpr2       ::=  '.' id SimpleExpr2
                   |	'.' id
                   |	'_' '.' id SimpleExpr2
                   |	'_' '.' id
@@ -311,6 +320,7 @@ ArgumentExprs     ::=  '(' [Exprs] ')'
                   |  [nl] BlockExpr
 BlockExpr         ::=  '{' CaseClauses '}'
                   |  '{' Block '}'
+                  |  '{' '}'
 //commit 6d297d----------------------------------------------------
 /*Block             ::=  BlockStat {semi BlockStat} * [ResultExpr]
 BlockStat         ::=  Import_
@@ -318,7 +328,14 @@ BlockStat         ::=  Import_
                   |  {Annotation} * {LocalModifier} * TmplDef
                   |  Expr1
                   |*/
-Block             ::=  [BlockStat] {semi [BlockStat]} * [ResultExpr]
+Block             ::=  BlockStat Block_ [ResultExpr]
+                  |  BlockStat [ResultExpr]
+                  |  Block_ [ResultExpr]
+
+Block_            ::=  semi + BlockStat Block_
+                  |  semi + BlockStat
+                  |  semi +
+
 BlockStat         ::=  Import_
                   |  {Annotation} * ['implicit' | 'lazy'] Def_
                   |  {Annotation} * {LocalModifier} * TmplDef
@@ -326,12 +343,14 @@ BlockStat         ::=  Import_
 //-----------------------------------------------------------------
 ResultExpr        ::=  Expr1
                   |  (Bindings | (['implicit'] id | '_') ':' CompoundType) '=>' Block
+                  |  (Bindings | (['implicit'] id | '_') ':' CompoundType) '=>'
 
 Enumerators       ::=  Generator {semi Generator} *
 Generator         ::=  Pattern1 '<-' Expr {[semi] Guard | semi Pattern1 '=' Expr} *
 
 CaseClauses       ::=  CaseClause { CaseClause } *
 CaseClause        ::=  'case' Pattern [Guard] '=>' Block
+                  |  'case' Pattern [Guard] '=>'
 Guard             ::=  'if' PostfixExpr
 
 Pattern           ::=  Pattern1 { '|' Pattern1 } *
@@ -439,6 +458,7 @@ VarDef            ::=  PatDef
                   |  ids ':' Type_ '=' '_'
 FunDef            ::=  FunSig [':' Type_] '=' Expr
                   |  FunSig [nl] '{' Block '}'
+                  |  FunSig [nl] '{' '}'
                   |  'this' ParamClause ParamClauses
                      ('=' ConstrExpr | [nl] ConstrBlock)
 TypeDef           ::=  id [TypeParamClause] '=' Type_
