@@ -230,7 +230,7 @@ RefineStat        ::=  Dcl
 Refinement        ::=  [nl] '{' RefineStat Refinement_ '}'
                   |  [nl] '{' RefineStat '}'
                   |  [nl] '{' Refinement_ '}'
-                  |  [nl] '{' '}'                 
+                  |  [nl] '{' '}'
 
 Refinement_	      ::=  semi + RefineStat Refinement_
                   |  semi + RefineStat
@@ -508,10 +508,14 @@ PackageObject     ::=  'package' 'object' ObjectDef
 CompilationUnit   ::=  {'package' QualId semi} * TopStatSeq*/
 
 
-TopStatSeq        ::=  TopStat {semi TopStat} *
-                  |  TopStat {semi} *
+TopStatSeq        ::=  TopStat TopStatSeq_
+                  |  TopStat
+                  |  TopStatSeq_
+
+TopStatSeq_       ::=  semi + TopStat TopStatSeq_
+                  |  semi + TopStat
                   |  semi +
-                  |  {semi TopStat} *
+
 TopStat           ::=  {Annotation [nl]} * {Modifier} * TmplDef
                   |  Import_
                   |  Packaging
@@ -523,5 +527,6 @@ Packaging         ::=  'package' QualId [nl] '{' TopStatSeq '}'
 PackageObject     ::=  'package' 'object' ObjectDef
 
 CompilationUnit   ::=  {'package' QualId semi} * TopStatSeq
+                  |  {'package' QualId semi} *
 //-----------------------------------------------------------------
 
