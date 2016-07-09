@@ -150,8 +150,10 @@ nl               ::=  CRLF
 
 semi             ::=  ';' |  nl {nl} *
 
-Literal           ::=  ['-'] integerLiteral
-                  |  ['-'] floatingPointLiteral
+Literal           ::=  '-' integerLiteral
+                  |  integerLiteral
+                  |  '-' floatingPointLiteral
+                  |  floatingPointLiteral
                   |  booleanLiteral
                   |  characterLiteral
                   |  stringLiteral
@@ -258,7 +260,7 @@ Expr1             ::=  'if' '(' Expr ')' {nl} * Expr [[semi] 'else' Expr]
                   |  'throw' Expr
                   |  'return' [Expr]
                   |  [SimpleExpr '.'] id '=' Expr
-                  |  SimpleExpr1 ArgumentExprs '=' Expr
+                  |  SimpleExpr1_ '=' Expr // old: SimpleExpr1 ArgumentExprs '=' Expr
                   |  PostfixExpr 'match' '{' CaseClauses '}'
                   |  PostfixExpr Ascription
                   |  PostfixExpr
@@ -318,6 +320,25 @@ SimpleExpr2       ::=  '.' id SimpleExpr2
                   |	ArgumentExprs SimpleExpr2
                   |	ArgumentExprs
 
+/*
+    rule for SimpleExpr1 followed by ArgumentExprs
+ */
+SimpleExpr1_       ::=	Literal SimpleExpr2_
+                  |	Path SimpleExpr2_
+                  |	'_' SimpleExpr2_
+                  |	'(' ')' SimpleExpr2_
+                  |	'(' Exprs ')' SimpleExpr2_
+                  |	'new' (ClassTemplate '.' id | 'new' (ClassTemplate '.' id SimpleExpr2_ | TemplateBody) '.' id | TemplateBody) '.' id SimpleExpr2_
+                  |	BlockExpr '.' id SimpleExpr2_
+                  |	'new' (ClassTemplate TypeArgs |	'new' (ClassTemplate TypeArgs SimpleExpr2_ | TemplateBody) TypeArgs | TemplateBody) TypeArgs SimpleExpr2_
+                  |	BlockExpr TypeArgs SimpleExpr2_
+
+SimpleExpr2_       ::=  '.' id SimpleExpr2_
+                  |	'_' '.' id SimpleExpr2_
+                  |	TypeArgs SimpleExpr2_
+                  |	'_' TypeArgs SimpleExpr2_
+                  |	ArgumentExprs SimpleExpr2_
+                  |	ArgumentExprs
 
 //-----------------------------------------------------------------
 Exprs             ::=  Expr {',' Expr} *
@@ -396,8 +417,7 @@ ParamType         ::=  Type_ '*'
                   |  '=>' Type_
                   |  Type_
 //-----------------------------------------------------------------
-ClassParamClauses ::=  {ClassParamClause} *
-                     [[nl] '(' 'implicit' ClassParams ')']
+ClassParamClauses ::=  {ClassParamClause} * [[nl] '(' 'implicit' ClassParams ')']
 ClassParamClause  ::=  [nl] '(' [ClassParams] ')'
 ClassParams       ::=  ClassParam {',' ClassParam} *
 ClassParam        ::=  {Annotation} * {Modifier} * [('val' | 'var')]
@@ -476,8 +496,10 @@ ClassDef          ::=  id [TypeParamClause] {ConstrAnnotation} * [AccessModifier
                      ClassParamClauses ClassTemplateOpt
 TraitDef          ::=  id [TypeParamClause] TraitTemplateOpt
 ObjectDef         ::=  id ClassTemplateOpt
-ClassTemplateOpt  ::=  'extends' ClassTemplate | [['extends'] TemplateBody]
-TraitTemplateOpt  ::=  'extends' TraitTemplate | [['extends'] TemplateBody]
+ClassTemplateOpt  ::=  'extends' ClassTemplate
+                  | [['extends'] TemplateBody]
+TraitTemplateOpt  ::=  'extends' TraitTemplate
+                  | [['extends'] TemplateBody]
 ClassTemplate     ::=  [EarlyDefs] ClassParents [TemplateBody]
 TraitTemplate     ::=  [EarlyDefs] TraitParents [TemplateBody]
 ClassParents      ::=  Constr {'with' AnnotType} *
