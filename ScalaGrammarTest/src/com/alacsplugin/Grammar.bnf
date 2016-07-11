@@ -96,17 +96,17 @@
     EPT				    =  '!'
     TLD				    =  '~'
 
-    plainid_regex       =  "regexp:[A-Z]([0-9a-zA-Z]*)(_[^a-zA-Z0-9()\[\]{}\.;,\s\'\"]+)?"
-    varid_regex         =  "regexp:[a-z]([0-9a-zA-Z]*)(_[^a-zA-Z0-9()\[\]{}\.;,\s\'\"]+)?"
-    op_regex            =  "regexp:[^a-zA-Z0-9()\[\]{}\.;,\s\'\"]+"
+    plainid_regex       =  "regexp:[A-Z\$_]([0-9a-zA-Z\$_]*)(_[^a-zA-Z0-9()\[\]{}\.;,\s\'\"\$_]+)?"
+    varid_regex         =  "regexp:[a-z]([0-9a-zA-Z\$_]*)(_[^a-zA-Z0-9()\[\]{}\.;,\s\'\"\$_]+)?"
+    op_regex            =  "regexp:[^a-zA-Z0-9()\[\]{}\.;,\s\'\"\$_]+"
 
 
-    COMMENT				=  'regexp://.*'
+    COMMENT				=  'regexp:(//.*)'
     ANY				    =  'regexp:.'
   ]
 
 }
-Program          ::= BlockExpr                                              // Start Symbol - BlockExpr ???
+Program          ::=  BlockExpr | CompilationUnit   // Start Symbol - BlockExpr ???
 
 //digit            ::=  decimalNumeral //ZERO | NONZERODIGIT
 //letter           ::=  UPPER | LOWER
