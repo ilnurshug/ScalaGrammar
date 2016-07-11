@@ -1,23 +1,52 @@
 {
     def foo (n : Int) = {
+        val t = xs(i); xs(i) = xs(j); exs(j) = t
         if ( n <= 1) "a" 
-        else foo ( n - 1) + foo(n -2) + true
-    }
-    
+        else foo ( -n - 1) + foo(n -2) + true
+    };
+
     def bar(n: Int, m:Int) = {
+        n += 1
+
+        f(args1)(args2)
+
+        (f(args1))(args2)
         return n +
-        m 
-    }
-    
+        -m
+    };
+
     object MatchTest1 extends App {
 	  def matchTest(x: Int): String = foo match {   case 1 if x > y && z => doSomething()
                                         case 1 if x > y => doSomethingElse()
                                         case 1 => doSomethingElseEntirely()
                                         case Address(Name(first, last), street, city, state, zip) => println(last + "a" + zip)
-                                        case _ => println("not an address") // the default case    
+                                        case _ => println("not an address") // the default case
                                       }
 	  println(matchTest(3))
-	}
-    
+	};
 
+    def sum(f: Int => Int): (Int, Int) => Int = {
+        def fumF(a: Int, b: Int): Int = {
+            if (a > b) 0 else f(a) + sumF(a+1, b)
+        }
+        sumF
+    };
+
+    val tolerance = 0.0001;
+
+    def isCloseEnough(x: Double, y: Double) = abs((x - y) / x) < tolerance;
+
+    def fixedPoint(f: Double => Double)(firstGuess: Double) = {
+        def iterate(guess: Double): Double = {
+            val next = f(guess)
+            if (isCloseEnough(guess, next)) next
+            else iterate(next)
+        }
+        iterate(firstGuess)
+    };
+
+    val fib: List[Int] = List(1,1,2,3 , 5 ,8);
+    val nums = 1 :: (2 :: (3 :: (4 :: Nil)));
+
+    def ::[B >: A](x: B): List[B] = new scala.::(x,this)
 }
