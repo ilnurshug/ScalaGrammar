@@ -1,0 +1,9 @@
+package org.jetbrains.plugins.scala.editor.importOptimizer
+
+import junit.framework.TestCase
+import org.jetbrains.plugins.scala.editor.importOptimizer.ScalaImportOptimizer._
+import org.junit.Assert
+
+class ImportTextCreatorTest extends TestCase {
+
+}
