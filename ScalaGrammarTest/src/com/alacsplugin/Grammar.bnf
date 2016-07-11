@@ -357,9 +357,11 @@ BlockStat         ::=  Import_
                   |  {Annotation} * {LocalModifier} * TmplDef
                   |  Expr1
                   |*/
-Block             ::=  BlockStat Block_ [ResultExpr]
+Block             ::=  ResultExpr_
+                  |  BlockStat Block_ [ResultExpr]
                   |  BlockStat [ResultExpr]
                   |  Block_ [ResultExpr]
+                  |  ResultExpr
 
 Block_            ::=  semi + BlockStat Block_
                   |  semi + BlockStat
@@ -370,8 +372,10 @@ BlockStat         ::=  Import_
                   |  {Annotation} * {LocalModifier} * TmplDef
                   |  Expr1
 //-----------------------------------------------------------------
-ResultExpr        ::=  Expr1
-                  |  (Bindings | (['implicit'] id | '_') ':' CompoundType) '=>' Block
+ResultExpr        ::=  ResultExpr_
+                  |  Expr1
+
+ResultExpr_       ::= (Bindings | (['implicit'] id | '_') ':' CompoundType) '=>' Block
                   |  (Bindings | (['implicit'] id | '_') ':' CompoundType) '=>'
 
 Enumerators       ::=  Generator {semi Generator} *
