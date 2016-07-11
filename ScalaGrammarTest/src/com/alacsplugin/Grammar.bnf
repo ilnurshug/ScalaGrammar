@@ -15,6 +15,7 @@
   tokens=[
     characterLiteralRE  = "regexp:\'[a-zA-Z]\'"
     stringLiteralRE     = "regexp:\"[^\"]*\""
+    multiLineCharsRE    = "regexp:\"\"\"((\"?\"?[^\"])*(\")*)\"\"\""
 
     //UPPER				=  'regexp:[A-Z]'
     //LOWER				=  'regexp:[a-z]'
@@ -85,8 +86,8 @@
     YIELD				=  "yield"
 
 
-    hexNumeral          =  'regexp:0[xX][0-9a-fA-F]+'
-    decimalNumeral      =  'regexp:(0|[1-9][0-9]*)'
+    hexNumeral          =  'regexp:0[xX][0-9a-fA-F]+[lL]?'
+    decimalNumeral      =  'regexp:(0|[1-9][0-9]*)[lL]?'
     floatingPointLiteral=  'regexp:[0-9]*\.?[0-9]+([eE][-+]?[0-9]+)?'
 
     OP_1				=  '+'
@@ -106,7 +107,7 @@
   ]
 
 }
-Program          ::=  BlockExpr | CompilationUnit   // Start Symbol - BlockExpr ???
+Program           ::=  BlockExpr | CompilationUnit   // Start Symbol - BlockExpr ???
 
 //digit            ::=  decimalNumeral //ZERO | NONZERODIGIT
 //letter           ::=  UPPER | LOWER
@@ -116,39 +117,40 @@ opchar           ::=  (!UPPER | !LOWER | !digit | !paren | !delim) any //(!SPACE
 //printableChar    ::= // all characters in [\u0020, \u007F] inclusive
 //charEscapeSeq    ::= '\' ('b' | 't' | 'n' | 'f' | 'r' | '"' | "'" | '\')
 
-op               ::=  OP_1
-                 | OP_2
-                 | OP_3
-                 | OP_4
-                 | EPT
-                 | TLD
-                 | op_regex             //opchar {opchar} *
+op                ::=  OP_1
+                  | OP_2
+                  | OP_3
+                  | OP_4
+                  | EPT
+                  | TLD
+                  | op_regex             //opchar {opchar} *
 
-varid            ::=  varid_regex       //LOWER idrest
-plainid          ::=  plainid_regex     //UPPER idrest
-                 |  varid
-                 |  op
-id               ::=  plainid
-                 //|  "'" stringLiteral "'"
+varid             ::=  varid_regex       //LOWER idrest
+plainid           ::=  plainid_regex     //UPPER idrest
+                  |  varid
+                  |  op
+id                ::=  plainid
+                  |  "'" stringLiteral "'"
 //idrest           ::=  {letter | digit} * ['_' op]
 
-integerLiteral   ::=  (decimalNumeral | hexNumeral) 
+integerLiteral    ::=  (decimalNumeral | hexNumeral)
 
-booleanLiteral   ::=  'true' | 'false'
+booleanLiteral    ::=  'true' | 'false'
 
-characterLiteral ::=  characterLiteralRE //"'" letter "'"                        // (charNoQuoteOrNewline | UnicodeEscape | charEscapeSeq) -> letter
-stringLiteral    ::=  stringLiteralRE
+characterLiteral  ::=  characterLiteralRE //"'" letter "'"                        // (charNoQuoteOrNewline | UnicodeEscape | charEscapeSeq) -> letter
+stringLiteral     ::=  stringLiteralRE
+                  |  multiLineCharsRE
 /*stringLiteral    ::=  '"' {stringElement} * '"'
                  |  '"""' multiLineChars '"""'*/
 //stringElement    ::=  letter                                // charNoDoubleQuoteOrNewline | UnicodeEscape | charEscapeSeq -> letter
 //multiLineChars   ::=  {['"'] ['"'] letter} * {'"'} *        // charNoDoubleQuote -> letter
+//
+symbolLiteral     ::=  "'" plainid
 
-symbolLiteral    ::=  "'" plainid
-
-nl               ::=  CRLF
+nl                ::=  CRLF
 
 
-semi             ::=  ';' |  nl {nl} *
+semi              ::=  ';' |  nl {nl} *
 
 Literal           ::=  '-' integerLiteral
                   |  integerLiteral
