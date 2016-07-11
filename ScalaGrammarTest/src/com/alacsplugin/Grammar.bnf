@@ -464,7 +464,14 @@ SelfType          ::=  id [':' Type_] '=>'
                   |  'this' ':' Type_ '=>'
 
 Import_            ::=  'import' ImportExpr {',' ImportExpr} *
-ImportExpr        ::=  StableId '.' (id | '_' | ImportSelectors)
+//-----------------------------------------------------------------
+/*ImportExpr        ::=  StableId '.' (id | '_' | ImportSelectors)*/
+
+ImportExpr        ::= StableId '.' ImportSelectors
+                  |  StableId '.' '_'
+                  |  StableId
+
+//-----------------------------------------------------------------
 ImportSelectors   ::=  '{' {ImportSelector ','} * (ImportSelector | '_') '}'
 ImportSelector    ::=  id ['=>' id | '=>' '_']
 
