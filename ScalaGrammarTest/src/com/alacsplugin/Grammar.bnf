@@ -14,7 +14,7 @@
 
   tokens=[
     characterLiteralRE  = "regexp:\'[a-zA-Z]\'"
-    stringLiteralRE     = "regexp:\"[a-zA-Z ]*\""
+    stringLiteralRE     = "regexp:\"[^\"]*\""
 
     //UPPER				=  'regexp:[A-Z]'
     //LOWER				=  'regexp:[a-z]'
@@ -445,10 +445,16 @@ TemplateStat      ::=  Import_
                   |  {Annotation [nl]} * {Modifier} * Dcl
                   |  Expr
                   |*/
-TemplateBody      ::=  [nl] '{' [SelfType] TemplateStat {semi TemplateStat} * '}'
-                  |  [nl] '{' [SelfType] {semi TemplateStat} * '}'
-                  |  [nl] '{' [SelfType] TemplateStat {semi} * '}'
-                  |  [nl] '{' [SelfType] {semi} * '}'
+
+TemplateBody      ::=  [nl] '{' [SelfType] TemplateStat TemplateBody_ '}'
+                  |  [nl] '{' [SelfType] TemplateStat '}'
+                  |  [nl] '{' [SelfType] TemplateBody_ '}'
+		          |  [nl] '{' [SelfType] '}'
+
+TemplateBody_     ::= semi + TemplateStat TemplateBody_
+                  |  semi + TemplateStat
+                  |  semi +
+
 TemplateStat      ::=  Import_
                   |  {Annotation [nl]} * {Modifier} * Def_
                   |  {Annotation [nl]} * {Modifier} * Dcl

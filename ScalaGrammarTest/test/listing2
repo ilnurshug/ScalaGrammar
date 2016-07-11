@@ -1,0 +1,31 @@
+{
+    object lazyLib {
+
+        // Delay the evaluation of an expression until it is needed.
+
+        def delay[A](value: => A): Susp[A] = new SuspImpl[A](value)
+
+        // Get the value of a delayed expression.
+        implicit def force[A](s: Susp[A]): A = s()
+
+
+        abstract class Susp[+A] extends Function0[A]
+
+
+        class SuspImpl[A](lazyValue: => A) extends Susp[A] {
+          private var maybeValue: Option[A] = None
+
+          override def apply() = maybeValue match { case None =>
+              val value = lazyValue
+              maybeValue = Some(value)
+              value
+          case Some(value) =>
+              value
+          }
+
+          override def toString() = maybeValue match { case None => "Susp(?)"
+            case Some(value) => "Susp(" + value + ")"
+          }
+        }
+    }
+}
