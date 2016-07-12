@@ -82,6 +82,7 @@ OPEN PROBLEMS:
         }
 
 8)
+    /* FIXED */
     DESCRIPTION:
     CODE:
         object K{
