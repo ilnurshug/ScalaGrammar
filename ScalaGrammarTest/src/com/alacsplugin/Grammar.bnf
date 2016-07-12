@@ -85,24 +85,23 @@
     WITH				=  "with"
     YIELD				=  "yield"
 
-
     hexNumeral          =  'regexp:0[xX][0-9a-fA-F]+[lL]?'
     decimalNumeral      =  'regexp:(0|[1-9][0-9]*)[lL]?'
     floatingPointLiteral=  'regexp:[0-9]*\.?[0-9]+([eE][-+]?[0-9]+)?'
 
+    COMMENT				=  'regexp:(/\*([^*]|[\r\n]|(\*+([^*/]|[\r\n])))*\*+/)|(//.*)'
+
     OP_1				=  '+'
     OP_2				=  '-'
     OP_3				=  '*'
-    OP_4				=  '/'
     EPT				    =  '!'
     TLD				    =  '~'
+
 
     plainid_regex       =  "regexp:[A-Z\$_]([0-9a-zA-Z\$_]*)(_[^a-zA-Z0-9()\[\]{}\.;,\s\'\"\$_]+)?"
     varid_regex         =  "regexp:[a-z]([0-9a-zA-Z\$_]*)(_[^a-zA-Z0-9()\[\]{}\.;,\s\'\"\$_]+)?"
     op_regex            =  "regexp:[^a-zA-Z0-9()\[\]{}\.;,\s\'\"\$_]+"
 
-
-    COMMENT				=  'regexp:(//.*)'
     ANY				    =  'regexp:.'
   ]
 
@@ -120,7 +119,6 @@ opchar           ::=  (!UPPER | !LOWER | !digit | !paren | !delim) any //(!SPACE
 op                ::=  OP_1
                   | OP_2
                   | OP_3
-                  | OP_4
                   | EPT
                   | TLD
                   | op_regex             //opchar {opchar} *
@@ -261,7 +259,7 @@ Expr1             ::=  'if' '(' Expr ')' {nl} * Expr [[semi] 'else' Expr]
                   |  'for' ('(' Enumerators ')' | '{' Enumerators '}') {nl} * ['yield'] Expr
                   |  'throw' Expr
                   |  'return' [Expr]
-                  |  [SimpleExpr '.'] id '=' Expr
+                  |  (SimpleExprId | id) '=' Expr // old: [SimpleExpr '.'] id '=' Expr
                   |  SimpleExpr1_ '=' Expr // old: SimpleExpr1 ArgumentExprs '=' Expr
                   |  PostfixExpr 'match' '{' CaseClauses '}'
                   |  PostfixExpr Ascription
@@ -341,6 +339,32 @@ SimpleExpr2_       ::=  '.' id SimpleExpr2_
                   |	'_' TypeArgs SimpleExpr2_
                   |	ArgumentExprs SimpleExpr2_
                   |	ArgumentExprs
+/*
+    rule for SimpleExpr followed by '.' id
+ */
+
+SimpleExprId        ::=	'new' (ClassTemplate | TemplateBody) '.' id
+                  |	BlockExpr '.' id
+                  |	SimpleExpr1Id
+
+
+SimpleExpr1Id       ::=	Literal SimpleExpr2Id
+                  |	Path SimpleExpr2Id
+                  | Path
+                  |	'_' SimpleExpr2Id
+                  |	'(' ')' SimpleExpr2Id
+                  |	'(' Exprs ')' SimpleExpr2Id
+                  |	'new' (ClassTemplate '.' id | 'new' (ClassTemplate '.' id SimpleExpr2Id | TemplateBody) '.' id | TemplateBody) '.' id SimpleExpr2Id
+                  |	BlockExpr '.' id SimpleExpr2Id
+                  |	'new' (ClassTemplate TypeArgs |	'new' (ClassTemplate TypeArgs SimpleExpr2Id | TemplateBody) TypeArgs | TemplateBody) TypeArgs SimpleExpr2Id
+                  |	BlockExpr TypeArgs SimpleExpr2Id
+
+SimpleExpr2Id      ::=  '.' id SimpleExpr2Id
+                  |	'_' '.' id SimpleExpr2Id
+                  |	TypeArgs SimpleExpr2Id
+                  |	'_' TypeArgs SimpleExpr2Id
+                  |	ArgumentExprs SimpleExpr2Id
+                  |	['_'] '.' id
 
 //-----------------------------------------------------------------
 Exprs             ::=  Expr {',' Expr} *
@@ -387,9 +411,9 @@ CaseClause        ::=  'case' Pattern [Guard] '=>' Block
 Guard             ::=  'if' PostfixExpr
 
 Pattern           ::=  Pattern1 { '|' Pattern1 } *
-Pattern1          ::=  Pattern2
+Pattern1          ::=  '_' ':' TypePat
                   |  varid ':' TypePat
-                  |  '_' ':' TypePat
+                  |  Pattern2
 Pattern2          ::=  Pattern3
                   |  varid ['@' Pattern3]
 Pattern3          ::=  SimplePattern { id [nl] SimplePattern } *
@@ -511,8 +535,7 @@ TypeDef           ::=  id [TypeParamClause] '=' Type_
 TmplDef           ::=  ['case'] 'class' ClassDef
                   |  ['case'] 'object' ObjectDef
                   |  'trait' TraitDef
-ClassDef          ::=  id [TypeParamClause] {ConstrAnnotation} * [AccessModifier]
-                     ClassParamClauses ClassTemplateOpt
+ClassDef          ::=  id [TypeParamClause] {ConstrAnnotation} * [AccessModifier] ClassParamClauses ClassTemplateOpt
 TraitDef          ::=  id [TypeParamClause] TraitTemplateOpt
 ObjectDef         ::=  id ClassTemplateOpt
 ClassTemplateOpt  ::=  'extends' ClassTemplate

@@ -1,0 +1,159 @@
+trait ColumnarTableCompanion {
+            class IndexedSource()
+        
+            (1)
+        }
+
+trait TaskExtra {
+          { x => x: A }
+        }
+
+object X{
+          for {
+            A <- x()
+            (_, node) <- signature
+          } ()
+        }
+
+class ScProjectionType (val x: Boolean /* todo*/)
+
+class Baz {
+            ba /*caret*/r
+        }
+
+class GroupManager @Singleton() @Inject() ()
+
+{object Foo{ q"\$result.putExtra(\${toName(c)(value)}, \$value)" }}
+
+
+package torimatomeru
+        
+        import org.parboiled2.ParseError
+        import utest._
+        import utest.framework.Test
+        import utest.util.Tree
+        
+        import scala.util.{Failure, Success}
+        
+        object SyntaxTest extends TestSuite
+
+object SyntaxTest extends TestSuite{
+          def check[T](input: String) = {
+        
+          }
+        }
+
+class JSCodePhase{
+          def genRTCall(args: Tree*)
+        }
+
+object SyntaxTest{
+          a()
+          throw 1
+        }
+        
+class TracingFilterBenchmark {
+          ZipkinTracer( a, if (on) 1.0f else 0.0f )
+        }
+        
+class A(@volatile var getCollectionCount: Long,@volatile var getCollectionTime: Long)
+
+object Moo{
+          a .b
+        
+          c
+        }
+        
+object O{
+    private[this] val applyMacroFull = 1
+}
+object O{
+         private[this] def applyMacroFull(c: Context)
+                              (expr: c.Expr[String],runtimeErrors: Boolean,debug: Boolean): c.Expr[Frag] = {
+                              }
+        }
+        
+object O{
+          class DebugFailure extends Exception
+        
+          1
+        }
+        
+object Foo{
+          0 match {case A | B => 0
+          }
+        }
+
+object L{
+          a b c
+          d = 1
+        }
+        
+/*                     __                                               *\
+        **     ________ ___   / /  ___      __ ____  Scala.js CLI               **
+        **    / __/ __// _ | / /  / _ | __ / // __/  (c) 2013-2014, LAMP/EPFL   **
+        **  __\ \/ /__/ __ |/ /__/ __ |/_// /_\ \    http://scala-js.org/       **
+        ** /____/\___/_/ |_/____/_/ | |__/ /____/                               **
+        **                          |/____/                                     **
+        *                                                                      */
+package scala.scalajs.cli
+
+object O{
+          for {a  <- b
+              c <- d} {
+            1
+          }
+        }
+
+object Foo{
+    val a = d // g
+    val b = e // h
+    val c = f
+}
+
+object L{
+          x match{ case y.Y(z) => z
+          }
+        }
+        
+object K{
+          val a: B {
+            val c: D
+          }
+        
+          1
+        }
+        
+object O{
+          a =:= b.c
+        }
+        
+object K{
+          a(1: _*)
+        }
+        
+object P{
+              tree match {case stats :+ expr  => 1
+              }
+        }
+        
+object K{
+          val nullo :: cow = 1
+        }
+
+        
+object K{
+    val + = 1
+    var * = 2
+}
+
+object O{
+          c match {case b_  => 1
+          }
+        }
+        
+trait Basic {
+          b match { case C => true; case _ => false }
+        }
+        
+// 539

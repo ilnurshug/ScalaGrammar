@@ -1,0 +1,97 @@
+OPEN PROBLEMS:
+
+1)
+    DESCRIPTION: 
+        "// {" - should be recognised as comment, but not as part of id "+..." 
+        если поставить пробел, то все нормально
+    CODE:
+        {
+        object O {
+                val x =  x+// { 
+                }
+        }
+        object O {
+            def x: Q.type#/* line: 2 */Inner 
+        }
+        object O {
+          val x = (x +/* */ 1)
+        }
+2)
+    DESCRIPTION:
+        problem with =>
+    CODE:
+        {
+            object Foo{
+                val a = (null): Int => Int
+            }
+        }
+        object X{
+          {
+            ((newEntries)): Int => 1
+          }
+        }
+        {
+            trait TaskExtra {
+                { x => x: A }
+            }
+        }
+        class Parser {
+          {() => }
+        }
+
+3)
+    DESCRIPTION:
+        problem with Type_ and Pattern1 rule
+    CODE:
+        object F{
+          func{ case _: F => fail }
+        }
+        
+4)?
+    DESCRIPTION:
+        отсутствуют скобки после @Singleton, НО в грамматике нет возможности не вывести скобки!!!
+    CODE:
+        {
+            class GroupManager @Singleton @Inject() ()
+        }
+5)
+    DESCRIPTION:
+        problem with =>
+    CODE:
+        {
+        object O{
+                val service = Service.mk { _: Request => Future.value(res) }
+                val service2 = Service.mk { _ => Future.value(res) }
+                }
+        }
+        
+6)
+    DESCRIPTION:
+        underscore problem
+    CODE:
+        class OptionLikeMatcher{ type A = _ \/ B }
+        
+7)
+    /* FIXED */
+    DESCRIPTION:
+        из SimpleExpr выводится * .id поэтому в правиле [SimpleExpr '.'] id '=' Expr будут проблемы
+    CODE:
+        object L{ 
+          a.b = c
+          a().b = c
+        }
+
+8)
+    DESCRIPTION:
+    CODE:
+        object K{
+          val omg_+ = 1
+        }
+        
+.)
+    DESCRIPTION:
+        very very very poor performance
+    CODE:
+        object O {
+            A(A(A(A())))
+        }
