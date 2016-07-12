@@ -98,8 +98,8 @@
     TLD				    =  '~'
 
 
-    plainid_regex       =  "regexp:[A-Z\$_]([0-9a-zA-Z\$_]*)(_[^a-zA-Z0-9()\[\]{}\.;,\s\'\"\$_]+)?"
-    varid_regex         =  "regexp:[a-z]([0-9a-zA-Z\$_]*)(_[^a-zA-Z0-9()\[\]{}\.;,\s\'\"\$_]+)?"
+    plainid_regex       =  "regexp:([A-Z]([0-9a-zA-Z\$_]*[0-9a-zA-Z\$])(_[^a-zA-Z0-9()\[\]{}\.;,\s\'\"\$_]+)?)|([A-Z](_[^a-zA-Z0-9()\[\]{}\.;,\s\'\"\$_]+)?)"
+    varid_regex         =  "regexp:([a-z]([0-9a-zA-Z\$_]*[0-9a-zA-Z\$])(_[^a-zA-Z0-9()\[\]{}\.;,\s\'\"\$_]+)?)|([a-z](_[^a-zA-Z0-9()\[\]{}\.;,\s\'\"\$_]+)?)"
     op_regex            =  "regexp:[^a-zA-Z0-9()\[\]{}\.;,\s\'\"\$_]+"
 
     ANY				    =  'regexp:.'
