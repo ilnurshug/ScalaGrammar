@@ -1,0 +1,14 @@
+{
+object callccInterpreter {
+
+  type Environment = List[Pair[Name, Value]];
+
+  def lookup(x: Name, e: Environment): M[Value] = e match { case List() => unitM(Wrong)
+    case Pair(y, b) :: e1 => if (x == y) unitM(b) else lookup(x, e1)
+  };
+
+  def apply(a: Value, b: Value): M[Value] = a match { case Fun(k) => k(b)
+    case _ => unitM(Wrong)
+  };
+}
+}

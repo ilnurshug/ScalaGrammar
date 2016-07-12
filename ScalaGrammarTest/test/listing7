@@ -1,0 +1,14 @@
+{
+object callccInterpreter {
+
+  def callCC[A](h: (A => M[A]) => M[A]) = M[A](c => h(a => M[A](d => c(a))) in c);
+
+  trait Term;
+  case class Var(x: Name) extends Term;
+
+  trait Value;
+  case object Wrong extends Value {
+   override def toString() = "wrong"
+  };
+}
+}

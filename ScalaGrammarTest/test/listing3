@@ -1,41 +1,7 @@
 {
 object callccInterpreter {
 
-  case class M[A](in: (A => Answer) => Answer) {
-    def bind[B](k: A => M[B])          = M[B](c => in (a => k(a) in c));
-    def map[B](f: A => B): M[B]        = bind(x => unitM(f(x)));
-  };
-
-  def unitM[A](a: A) = M[A](c => c(a));
-
-  def id[A] = (x: A) => x;
-  def showM(m: M[Value]): String = (m in id).toString();
-
-  def callCC[A](h: (A => M[A]) => M[A]) =
-    M[A](c => h(a => M[A](d => c(a))) in c);
-
-  trait Term;
-  case class Var(x: Name) extends Term;
-
-  trait Value;
-  case object Wrong extends Value {
-   override def toString() = "wrong"
-  };
-
-  type Environment = List[Pair[Name, Value]];
-
-  def lookup(x: Name, e: Environment): M[Value] = e match {
-    case List() => unitM(Wrong)
-    case Pair(y, b) :: e1 => if (x == y) unitM(b) else lookup(x, e1)
-  };
-
-  def apply(a: Value, b: Value): M[Value] = a match {
-    case Fun(k) => k(b)
-    case _ => unitM(Wrong)
-  };
-
-  def interp(t: Term, e: Environment): M[Value] = t match {
-    case Lam(x, t) => unitM(Fun(a => interp(t, Pair(x, a) :: e)))
+  def interp(t: Term, e: Environment): M[Value] = t match { case Lam(x, t) => unitM(Fun(a => interp(t, Pair(x, a) :: e)))
     case App(f, t) => for (a <- interp(f, e);
 			   b <- interp(t, e);
 			   c <- apply(a, b))

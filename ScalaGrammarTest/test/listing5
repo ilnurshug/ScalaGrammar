@@ -1,0 +1,9 @@
+{
+def reduceLeft(op: (A, A) => A): A = this match { case Nil => error("Nil.reduceLeft")
+	case x :: xs => (xs foldLeft x)(op)
+}
+
+def foldLeft[B](z: B)(op: (B, A) => B): B = this match { case Nil => z
+	case x :: xs => (xs foldLeft op(z, x))(op)
+}
+}
