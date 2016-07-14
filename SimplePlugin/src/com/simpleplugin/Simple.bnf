@@ -25,6 +25,7 @@
       op_2='-'
       op_3='*'
       op_4='/'
+      op_5=';'
 
       keyword_1="define:"
       keyword_2="site:"
@@ -53,8 +54,3 @@ literal_expr ::= number
 
 query ::= keyword words
 private keyword ::= "define:" | "site:" | "links:"
-
-
-
-
-

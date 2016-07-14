@@ -16,7 +16,8 @@
       LP='('
       RP=')'
 
-      number='regexp:\d+(\.\d*)?'
+      //number='regexp:\d+(\.\d*)?'
+      digit='regexp:[0-9]'
       comment='regexp://.*'
       crlf='regexp:\n|\r|\r\n'
       words='regexp:[a-z ]+'
@@ -36,7 +37,7 @@
   extends(".*expr")=expr
 }
 
-simpleFile ::= item_*
+simpleFile ::= number // item_*
 
 private item_ ::= (expr|comment|crlf|query)
 
@@ -53,3 +54,5 @@ literal_expr ::= number
 
 query ::= keyword words
 private keyword ::= "define:" | "site:" | "links:"
+
+number ::= digit {digit} *
