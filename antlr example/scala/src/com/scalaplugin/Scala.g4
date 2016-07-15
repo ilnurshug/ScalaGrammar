@@ -48,6 +48,9 @@ qualId            : id ('.' id)* ;
 
 ids               : id (WhiteSpace*  ',' WhiteSpace* id)* ;
 
+path              :  stableId
+                  |  (id '.')? 'this' ;
+
 stableId          :  id stableId1
                   |	 id '.' 'this' '.' id stableId1
                   |	 'this' '.' id stableId1
@@ -133,15 +136,33 @@ infixExpr         : prefixExpr
 prefixExpr        : ('-' | '+' | '~' | '!')? WhiteSpace*
                     ('new' WhiteSpace+ (classTemplate | templateBody)| blockExpr | simpleExpr1 '_'?) ;
 
-simpleExpr1       : literal
-                  | stableId 
-                  | (id '.')? 'this'
-                  | '_'
-                  | '(' WhiteSpace* exprs? WhiteSpace* ')'
-                  | ('new' (classTemplate | templateBody) | blockExpr ) '.' id
-                  | ('new' (classTemplate | templateBody) | blockExpr ) WhiteSpace* typeArgs
-                  | simpleExpr1 WhiteSpace* argumentExprs
-        ;
+simpleExpr1       :	literal WhiteSpace* simpleExpr2
+                  |	literal
+                  |	path WhiteSpace* simpleExpr2
+                  |	path
+                  |	'_' WhiteSpace* simpleExpr2
+                  |	'_'
+                  |	'(' WhiteSpace* ')' WhiteSpace* simpleExpr2
+                  |	'(' WhiteSpace* ')'
+                  |	'(' WhiteSpace* exprs WhiteSpace* ')' WhiteSpace* simpleExpr2
+                  |	'(' WhiteSpace* exprs WhiteSpace* ')'
+                  |	'new' (WhiteSpace* classTemplate WhiteSpace* '.' WhiteSpace* id | WhiteSpace* 'new' (WhiteSpace* classTemplate WhiteSpace* '.' WhiteSpace* id WhiteSpace* simpleExpr2 | WhiteSpace* templateBody) WhiteSpace* '.' WhiteSpace* id WhiteSpace* | WhiteSpace* templateBody) WhiteSpace* '.' WhiteSpace* id WhiteSpace* simpleExpr2
+                  |	blockExpr WhiteSpace* '.' WhiteSpace* id WhiteSpace* simpleExpr2
+                  |	blockExpr WhiteSpace* '.' WhiteSpace* id
+                  |	'new' (WhiteSpace* classTemplate WhiteSpace* typeArgs WhiteSpace* |	WhiteSpace* 'new' (WhiteSpace* classTemplate WhiteSpace* typeArgs WhiteSpace* simpleExpr2 WhiteSpace* | WhiteSpace* templateBody) WhiteSpace* typeArgs | WhiteSpace* templateBody) WhiteSpace* typeArgs WhiteSpace* simpleExpr2
+                  |	blockExpr WhiteSpace* typeArgs WhiteSpace* simpleExpr2
+                  |	blockExpr WhiteSpace* typeArgs ;
+
+simpleExpr2       :  '.' id simpleExpr2
+                  |	'.' id
+                  |	'_' '.' id simpleExpr2
+                  |	'_' '.' id
+                  |	typeArgs simpleExpr2
+                  |	typeArgs
+                  |	'_' typeArgs simpleExpr2
+                  |	'_' typeArgs
+                  |	argumentExprs simpleExpr2
+                  |	argumentExprs ;
                   
 exprs             : expr ( WhiteSpace* ',' WhiteSpace* expr)* ;
 
