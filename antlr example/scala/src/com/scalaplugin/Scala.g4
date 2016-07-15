@@ -72,7 +72,7 @@ stableId1         :  '.' id stableId1
 classQualifier    : '[' id ']' ;
 
 type              : functionArgTypes WhiteSpace* '=>' WhiteSpace* type
-                  | infixType WhiteSpace+ existentialClause
+                  | infixType WhiteSpace* existentialClause
                   | infixType WhiteSpace*;
 
 functionArgTypes  : infixType
@@ -153,15 +153,15 @@ simpleExpr1       :	literal WhiteSpace* simpleExpr2
                   |	blockExpr WhiteSpace* typeArgs WhiteSpace* simpleExpr2
                   |	blockExpr WhiteSpace* typeArgs ;
 
-simpleExpr2       :  '.' id simpleExpr2
+simpleExpr2       :  '.' id  WhiteSpace* simpleExpr2
                   |	'.' id
-                  |	'_' '.' id simpleExpr2
+                  |	'_' '.' id  WhiteSpace* simpleExpr2
                   |	'_' '.' id
-                  |	typeArgs simpleExpr2
+                  |	typeArgs  WhiteSpace* simpleExpr2
                   |	typeArgs
-                  |	'_' typeArgs simpleExpr2
-                  |	'_' typeArgs
-                  |	argumentExprs simpleExpr2
+                  |	'_'  WhiteSpace* typeArgs WhiteSpace*  simpleExpr2
+                  |	'_' WhiteSpace*  typeArgs
+                  |	argumentExprs  WhiteSpace* simpleExpr2
                   |	argumentExprs ;
                   
 exprs             : expr ( WhiteSpace* ',' WhiteSpace* expr)* ;
@@ -189,7 +189,7 @@ generator         : pattern1 WhiteSpace* '<-' WhiteSpace* expr (WhiteSpace* Semi
 
 caseClauses       : caseClause+ ;
 
-caseClause        : 'case' WhiteSpace+ pattern WhiteSpace* guard? WhiteSpace* '=>' WhiteSpace* block ;
+caseClause        : 'case' WhiteSpace* pattern WhiteSpace* guard? WhiteSpace* '=>' WhiteSpace* block ;
   
 guard             : 'if' WhiteSpace* postfixExpr ;
 
@@ -276,7 +276,7 @@ templateStat      : import_
                   |  expr
                   | ;
                   
-selfType          : id (WhiteSpace* ':' WhiteSpace* type)? WhiteSpace* '=>'
+selfType          : id (WhiteSpace* ':' WhiteSpace* type)? WhiteSpace* '=>' WhiteSpace*
                   | 'this' WhiteSpace* ':' WhiteSpace* type WhiteSpace* '=>' ;
 
 import_           : 'import' WhiteSpace+ importExpr (WhiteSpace* ',' WhiteSpace* importExpr)* ;
