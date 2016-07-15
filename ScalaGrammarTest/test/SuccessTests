@@ -9,10 +9,8 @@ trait TaskExtra {
         }
 
 object X{
-          for {
-            A <- x()
-            (_, node) <- signature
-          } ()
+          for { A <- x()
+            (_, node) <- signature} ()
         }
 
 class ScProjectionType (val x: Boolean /* todo*/)
