@@ -1,0 +1,3 @@
+[submodule "jetbrains-plugin-sample-master/adaptor"]
+	path = jetbrains-plugin-sample-master/adaptor
+	url = https://github.com/antlr/jetbrains.git

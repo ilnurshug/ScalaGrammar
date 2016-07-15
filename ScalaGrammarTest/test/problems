@@ -7,7 +7,7 @@ OPEN PROBLEMS:
     CODE:
         {
         object O {
-                val x =  x+// { 
+                val x =  x+// {
                 }
         }
         object O {
@@ -46,7 +46,7 @@ OPEN PROBLEMS:
         object F{
           func{ case _: F => fail }
         }
-        
+
 4)?
     DESCRIPTION:
         отсутствуют скобки после @Singleton, НО в грамматике нет возможности не вывести скобки!!!
@@ -54,6 +54,31 @@ OPEN PROBLEMS:
         {
             class GroupManager @Singleton @Inject() ()
         }
+    DESCRIPTION:
+        непохоже чтобы эти куски кода выводились в грамматике Scala
+    CODE:
+        object System {
+                  def a[@b T[@b V]] = 1
+                }
+        object T{ @BP val x }
+        class A { def fn = List apply[Int] 2 }
+        class A{
+            def x { implicit lazy val e:Int = 0 }
+        }
+        object X{
+          object Y{var z = 1}
+          Y z = 2
+          case class Z(z: Int){case class X(x: Int){ var y = 1}}
+          Z apply 1 X 2 y = 4
+
+          a m "txt" t = 18; println("x")
+          X x = 1 match {case _ => 2}
+        }
+        object X{ type x = {def t: Int = 1} }
+        object Test{
+                  t match { case Cell[a](x: Int) => () }
+                }
+        class T extends E with C(12);
 5)
     DESCRIPTION:
         problem with =>
@@ -67,7 +92,7 @@ OPEN PROBLEMS:
         
 6)
     DESCRIPTION:
-        underscore problem
+        underscore problem (такое вообще выводится?)
     CODE:
         class OptionLikeMatcher{ type A = _ \/ B }
         
@@ -96,3 +121,20 @@ OPEN PROBLEMS:
         object O {
             A(A(A(A())))
         }
+
+9)
+    DESCRIPTION:
+        проблема с лексером из-за первого символа '_'
+    CODE:
+        import com.a.{ _ => _ }
+
+        object ScopedVar {
+                          def withScopedVars(ass: Seq[_]) = 1
+                        }
+10)
+     CODE:
+        class immutable { new ({val x = 1}) }
+        class C{ x match {case a @ _ ** y => z} }
+
+        object Test{ t match { case Cell(x: Int) => () }   }
+        все ок, если x заменить на _ - похоже какая то проблема с лексером
