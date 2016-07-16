@@ -78,7 +78,7 @@ type              : functionArgTypes WhiteSpace* '=>' WhiteSpace* type
 functionArgTypes  : infixType
                   | '(' WhiteSpace* ( paramType (WhiteSpace* ',' WhiteSpace* paramType )* )? WhiteSpace* ')' ;
 
-existentialClause : 'forSome' WhiteSpace* '{' WhiteSpace* existentialDcl (WhiteSpace* Semi WhiteSpace* existentialDcl)* WhiteSpace* '}';
+existentialClause : 'forSome' WhiteSpace* '{' WhiteSpace* existentialDcl (WhiteSpace* semi WhiteSpace* existentialDcl)* WhiteSpace* '}';
 
 existentialDcl    : 'type' WhiteSpace+ typeDcl
                   | 'val' WhiteSpace+ valDcl;
@@ -100,7 +100,7 @@ typeArgs          : '[' WhiteSpace* types WhiteSpace* ']';
 
 types             : type (WhiteSpace* ',' WhiteSpace* type)*;
 
-refinement        : Nl? '{' WhiteSpace* refineStat (WhiteSpace* Semi WhiteSpace* refineStat)* WhiteSpace* '}';
+refinement        : Nl? '{' WhiteSpace* refineStat (WhiteSpace* semi WhiteSpace* refineStat)* WhiteSpace* '}';
 
 refineStat        : dcl
                   | 'type' WhiteSpace+ typeDef
@@ -115,10 +115,10 @@ ascription        : ':' WhiteSpace* infixType
 expr              : (bindings | ('implicit' WhiteSpace+|WhiteSpace*) id | '_') WhiteSpace* '=>' WhiteSpace* expr
                   | expr1 ;
 
-expr1             : 'if' WhiteSpace* '(' WhiteSpace* expr WhiteSpace* ')' WhiteSpace* Nl* WhiteSpace* expr (WhiteSpace* Semi? WhiteSpace* 'else' WhiteSpace* expr)?
+expr1             : 'if' WhiteSpace* '(' WhiteSpace* expr WhiteSpace* ')' WhiteSpace* Nl* WhiteSpace* expr (WhiteSpace* semi? WhiteSpace* 'else' WhiteSpace* expr)?
                   | 'while' WhiteSpace* '(' WhiteSpace* expr WhiteSpace* ')' WhiteSpace* Nl* WhiteSpace* expr
                   | 'try' (WhiteSpace* '{' WhiteSpace* block WhiteSpace* '}' WhiteSpace* | WhiteSpace* expr) ( WhiteSpace*'catch' WhiteSpace* '{' WhiteSpace* caseClauses WhiteSpace* '}')? (WhiteSpace* 'finally' WhiteSpace* expr)?
-                  | 'do' WhiteSpace* expr WhiteSpace* Semi? WhiteSpace* 'while' WhiteSpace* '(' WhiteSpace* expr WhiteSpace* ')'
+                  | 'do' WhiteSpace* expr WhiteSpace* semi? WhiteSpace* 'while' WhiteSpace* '(' WhiteSpace* expr WhiteSpace* ')'
                   | 'for' WhiteSpace* ('(' WhiteSpace* enumerators WhiteSpace* ')' | '{' WhiteSpace* enumerators WhiteSpace* '}') WhiteSpace* Nl* WhiteSpace* 'yield'? WhiteSpace* expr
                   | 'throw' WhiteSpace* expr
                   | 'return' WhiteSpace* expr?
@@ -172,7 +172,7 @@ argumentExprs     : '(' WhiteSpace* exprs? WhiteSpace* ')' WhiteSpace*
                   
 blockExpr         : '{' WhiteSpace* caseClauses WhiteSpace* '}'
                   | '{' WhiteSpace* block WhiteSpace* '}' ;
-block             : blockStat (WhiteSpace* Semi WhiteSpace* blockStat)* WhiteSpace* resultExpr? ;
+block             : blockStat (WhiteSpace* semi WhiteSpace* blockStat)* WhiteSpace* resultExpr? ;
 
 blockStat         : import_
                   | annotation* WhiteSpace* ('implicit' | 'lazy')? WhiteSpace* def
@@ -183,9 +183,9 @@ blockStat         : import_
 resultExpr        : expr1
                   | (bindings | ('implicit'? WhiteSpace* id | '_') WhiteSpace* ':' WhiteSpace* compoundType) WhiteSpace* '=>' WhiteSpace* block ;
 
-enumerators       : generator WhiteSpace* (WhiteSpace* Semi WhiteSpace* generator)* ;
+enumerators       : generator WhiteSpace* (WhiteSpace* semi WhiteSpace* generator)* ;
 
-generator         : pattern1 WhiteSpace* '<-' WhiteSpace* expr (WhiteSpace* Semi? WhiteSpace* guard | WhiteSpace* Semi WhiteSpace* pattern1 WhiteSpace* '=' WhiteSpace* expr)* ;
+generator         : pattern1 WhiteSpace* '<-' WhiteSpace* expr (WhiteSpace* semi? WhiteSpace* guard | WhiteSpace* semi WhiteSpace* pattern1 WhiteSpace* '=' WhiteSpace* expr)* ;
 
 caseClauses       : caseClause+ ;
 
@@ -268,7 +268,7 @@ annotation        : '@' simpleType WhiteSpace* argumentExprs* WhiteSpace*;
 
 constrAnnotation  : '@' simpleType WhiteSpace* argumentExprs ;
 
-templateBody      : Nl? WhiteSpace* '{' WhiteSpace* selfType? WhiteSpace* templateStat (WhiteSpace* Semi WhiteSpace* templateStat)* WhiteSpace* '}' ;
+templateBody      : Nl? WhiteSpace* '{' WhiteSpace* selfType? WhiteSpace* templateStat (WhiteSpace* semi WhiteSpace* templateStat)* WhiteSpace* '}' ;
 
 templateStat      : import_
                   | (annotation Nl?)* ((modifier WhiteSpace*)+ | WhiteSpace*) def
@@ -348,17 +348,17 @@ traitParents      : annotType (WhiteSpace+ 'with' WhiteSpace+ annotType)* ;
 
 constr            : annotType WhiteSpace* argumentExprs* ;
 
-earlyDefs         : '{' WhiteSpace* (earlyDef (WhiteSpace* Semi WhiteSpace* earlyDef)*)? WhiteSpace* '}' WhiteSpace* 'with' ;
+earlyDefs         : '{' WhiteSpace* (earlyDef (WhiteSpace* semi WhiteSpace* earlyDef)*)? WhiteSpace* '}' WhiteSpace* 'with' ;
 
 earlyDef          : (annotation WhiteSpace* Nl?)* WhiteSpace* (modifier WhiteSpace*)* WhiteSpace* patVarDef ;
 
 constrExpr        : selfInvocation 
                   | constrBlock ;
                   
-constrBlock       : '{' WhiteSpace* selfInvocation (WhiteSpace* Semi WhiteSpace* blockStat)* WhiteSpace* '}' ;
+constrBlock       : '{' WhiteSpace* selfInvocation (WhiteSpace* semi WhiteSpace* blockStat)* WhiteSpace* '}' ;
 selfInvocation    : 'this' WhiteSpace* argumentExprs+ ;
 
-topStatSeq        : topStat (WhiteSpace* Semi WhiteSpace* topStat)* ;
+topStatSeq        : topStat (WhiteSpace* semi WhiteSpace* topStat)* ;
 
 topStat           : (annotation WhiteSpace* Nl?)* WhiteSpace* (modifier WhiteSpace*)* WhiteSpace* tmplDef
                   | import_
@@ -370,9 +370,11 @@ packaging         : 'package' WhiteSpace+ qualId WhiteSpace* Nl? WhiteSpace* '{'
 
 packageObject     : 'package' WhiteSpace+ 'object' WhiteSpace+ objectDef ;
 
-compilationUnit   : ('package' WhiteSpace+ qualId WhiteSpace* Semi)* WhiteSpace* topStatSeq ;
+compilationUnit   : ('package' WhiteSpace+ qualId WhiteSpace* semi)* WhiteSpace* topStatSeq ;
 
-id                : Id
+id                : Plainid
+                  | Varid
+                  | '\'' StringLiteral '\''
                   | OP_1
                   | OP_2
                   | OP_3
@@ -382,6 +384,7 @@ id                : Id
                   | UNDERSCORE
                   | TO;
 
+semi              :  ';' |  Nl+;
 
 // Lexer
 
@@ -456,18 +459,21 @@ BooleanLiteral   :  'true' | 'false';
 CharacterLiteral :  '\'' (PrintableChar | CharEscapeSeq) '\'';
 StringLiteral    :  '"' StringElement* '"'
                  |  '"""' MultiLineChars '"""';
-SymbolLiteral    :  '\'' Plainid;
+SymbolLiteral    :  '\'' (Op | Upper Idrest | Varid);
 IntegerLiteral   :  (DecimalNumeral | HexNumeral) ('L' | 'l')?;
 FloatingPointLiteral
                  :  Digit+ '.' Digit+ ExponentPart? FloatType?
                  |  '.' Digit+ ExponentPart? FloatType?
                  |  Digit ExponentPart FloatType?
                  |  Digit+ ExponentPart? FloatType;
-Id               :  Plainid
-                 |  '\'' StringLiteral '\'';
-Varid            :  Lower Idrest;
-Semi             :  ';' |  Nl+;
 
+Nl               :  '\r'? '\n';
+
+Plainid          :  Op
+                 |  Upper Idrest ;
+                 //|  Varid ;      // во избежание пересечения множества строк, распознаваемых разными правилами лексера
+
+Varid            :  Lower Idrest;
 
 LINE_COMMENT : '//' [^\n\r]*        -> channel(HIDDEN) ;
 COMMENT      : '/*' .*? '*/'    	-> channel(HIDDEN) ;
@@ -477,12 +483,8 @@ WhiteSpace       :  [ \t]+ ;
 
 
 // fragments
-fragment Nl               :  '\r'? '\n';
 fragment UnicodeEscape    :	'\\' 'u' 'u'? HexDigit HexDigit HexDigit HexDigit ;
 
-fragment Plainid          :  Op
-                          |  Upper Idrest
-                          |  Varid ;
 
 fragment Op               :  Opchar+;
 fragment Opchar           :  ~[a-zA-Z0-9()[\]{}.;, \r\t\n'"$_] ;

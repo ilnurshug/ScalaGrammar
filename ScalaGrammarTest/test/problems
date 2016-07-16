@@ -122,7 +122,7 @@ OPEN PROBLEMS:
             A(A(A(A())))
         }
 
-9)
+9)  /* FIXED */
     DESCRIPTION:
         проблема с лексером из-за первого символа '_'
     CODE:
@@ -135,6 +135,7 @@ OPEN PROBLEMS:
      CODE:
         class immutable { new ({val x = 1}) }
         class C{ x match {case a @ _ ** y => z} }
-
+	
+	/* FIXED */
         object Test{ t match { case Cell(x: Int) => () }   }
         все ок, если x заменить на _ - похоже какая то проблема с лексером
