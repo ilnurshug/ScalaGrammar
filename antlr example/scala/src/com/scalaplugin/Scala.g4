@@ -379,6 +379,7 @@ id                : Id
                   | EPT
                   | TLD
                   | EQ
+                  | UNDERSCORE
                   | TO;
 
 
